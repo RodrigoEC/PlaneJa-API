@@ -1,0 +1,43 @@
+{
+  "name": "planeja-api",
+  "version": "1.0.0",
+  "description": "API do projeto de TCC PlaneJá.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --respawn --pretty --transpile-only src/server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RodrigoEC/PlaneJa-API.git"
+  },
+  "keywords": [
+    "express"
+  ],
+  "author": "Rodrigo Eloy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RodrigoEC/PlaneJa-API/issues"
+  },
+  "homepage": "https://github.com/RodrigoEC/PlaneJa-API#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "helmet": "^6.0.0",
+    "multer": "^1.4.5-lts.1",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.14",
+    "@types/helmet": "^4.0.0",
+    "@types/multer": "^1.4.7",
+    "@types/pdf-parse": "^1.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.38.0",
+    "@typescript-eslint/parser": "^5.38.0",
+    "eslint": "^8.23.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.8.3"
+  }
+}
