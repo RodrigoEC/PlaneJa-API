@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
-import { extractPDFText, regexRecord } from "../services";
+import { extractRegexRecord } from "../services/record";
+import { extractPDFText } from "../util/util";
+
+const PDFWRONGCONTENT = "No data required was extracted from the PDF uploaded";
 
 export const extractRecord = async (req: Request, res: Response) => {
   try {
     const file = req.file;
-    if (!file) return res.status(400).send("Missing file (File) parameter");
+    if (!file) return res.status(404).send("Missing file (File) parameter");
 
     const text = await extractPDFText(file.path);
-    const gradData = regexRecord(text);
-    if (gradData.length === 0)
-      return res
-        .status(400)
-        .send("Wasn't possible to extract any data from the PDF uploaded");
+    const gradData = extractRegexRecord(text);
+    if (gradData.length === 0) return res.status(422).send(PDFWRONGCONTENT);
 
     res.status(200).send(gradData);
   } catch (e) {
