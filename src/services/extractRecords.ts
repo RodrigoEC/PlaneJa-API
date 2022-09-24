@@ -11,7 +11,14 @@ export interface GradRecord {
   semester: string;
 }
 
-export function extractRegexRecord(text: string): Array<GradRecord> {
+/**
+ * This function recieves the text that's going to be extracted from the PDF uploaded
+ * and extract data related to the Subject and Schedule.
+ *
+ * @param text Text that's going to have data extracted.
+ * @returns A list of the type GradRecord with the info that was retrieved.
+ */
+export function extractRegexRecord(text: string): GradRecord[] {
   const regexData = [...text.matchAll(regexRecord)];
   return regexData.map(
     ([, id, name, type, credits, workload, grade, status, semester]) => {

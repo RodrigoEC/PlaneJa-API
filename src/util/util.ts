@@ -3,9 +3,11 @@ import pdf from "pdf-parse";
 import { Schedule } from "../services/extractPajamas";
 
 /**
+ * This function uses pdf-parse lib (https://www.npmjs.com/package/pdf-parse) to extract
+ * text from a pdf path that's passed as parameter to the function
  *
- * @param pdfPath
- * @returns
+ * @param pdfPath: File path of where the pdf file that's going to have the data extracted is
+ * @returns The text (string) extract from the PDF
  */
 export async function extractPDFText(pdfPath: string): Promise<string> {
   const dataBuffer = fs.readFileSync(pdfPath);

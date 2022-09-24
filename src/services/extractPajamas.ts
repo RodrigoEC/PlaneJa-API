@@ -14,7 +14,16 @@ export interface Subject {
   workload: number;
   schedule: Array<Schedule[]>;
 }
-
+/**
+ * This function recieves the text that's going to be extracted from the PDF uploaded
+ * and extract data related to the Subject and Schedule.
+ *
+ * Obs: Some subjects differ only on the professor but has the same schedules, because
+ * of that I had to filter duplicated schedules.
+ *
+ * @param text Text that's going to have data extracted.
+ * @returns A list of the type Subject with the info that was retrieved.
+ */
 export function extractPajamaSubjects(text: string): Subject[] {
   const regexData = [...text.matchAll(regexPajamaContent)];
   const filteredSubjects = {};
