@@ -1,5 +1,5 @@
 import { regexPajamaContent } from "../util/const";
-import { compareSubject } from "../util/util.ts";
+import { compareSubject } from "../util/util";
 
 export interface Schedule {
   day: string;

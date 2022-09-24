@@ -1,6 +1,6 @@
 import fs from "fs";
 import pdf from "pdf-parse";
-import { Schedule } from "../services/extractPajama.ts";
+import { Schedule } from "../services/extractPajamas";
 
 /**
  *
