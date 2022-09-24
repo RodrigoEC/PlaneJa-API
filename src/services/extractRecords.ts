@@ -21,7 +21,7 @@ export function extractRegexRecord(text: string): Array<GradRecord> {
         type,
         credits: +credits,
         workload: +workload,
-        grade: +grade,
+        grade: +grade.replace(",", "."),
         status,
         semester,
       };
