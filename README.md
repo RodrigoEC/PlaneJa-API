@@ -1,7 +1,5 @@
 # PlaneJa-API
 
-## O que é o
-
 Essa é a API da aplicação PlaneJá, meu TCC, e ela tem as seguintes funcionalidades:
 
 - [x] Extrair dados das cadeiras do histórico do aluno de computação na UFCG;
