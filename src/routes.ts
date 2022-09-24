@@ -6,4 +6,4 @@ import { extractRecord } from "./controllers/extractRecord";
 export const router = express.Router();
 const upload = multer({ dest: os.tmpdir() });
 
-router.post("/", upload.single("file"), extractRecord);
+router.post("/extract-record", upload.single("file"), extractRecord);

@@ -1,5 +1,4 @@
 import { regexRecord } from "../util/const";
-import { extractClassName } from "../util/util";
 
 export interface GradRecord {
   id: number;
@@ -18,7 +17,7 @@ export function extractRegexRecord(text: string): Array<GradRecord> {
     ([, id, name, type, credits, workload, grade, status, semester]) => {
       return {
         id: +id,
-        name: extractClassName(name),
+        name: name.substring(0, name.length - 1).trim(),
         type,
         credits: +credits,
         workload: +workload,
