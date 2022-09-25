@@ -17,7 +17,7 @@ export interface Subject {
 }
 
 export interface Semester {
-  courseName: string;
+  name: string;
   semester: string;
   classes: Subject[];
 }
@@ -40,7 +40,7 @@ export function extractPajamaSubjects(text: string): Semester {
   if (!semesterData) return throwExtractError(["curso", "semester"]);
 
   return {
-    courseName: semesterData[1],
+    name: semesterData[1],
     semester: semesterData[2],
     classes,
   };
