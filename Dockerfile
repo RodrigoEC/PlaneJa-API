@@ -1,6 +1,6 @@
 FROM node:16 as base
 
-WORKDIR /home/node/app
+WORKDIR /app
 
 COPY package*.json ./
 
@@ -8,7 +8,7 @@ RUN npm i
 
 COPY . . 
 
-COPY ./node_modules /app/node_modules
+# COPY ./node_modules /app/node_modules
 
 RUN chown -R $user:$user /app
 
