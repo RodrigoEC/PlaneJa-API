@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { router } from "./routes";
@@ -8,7 +8,7 @@ dotenv.config();
 
 const PORT: number = parseInt(process.env.PORT as string, 10) || 7000;
 
-const logger = (req, res, next) => {
+const logger = (req: Request, res: Response, next: NextFunction) => {
   console.log(`>>> Requisição: ${req.path} - ${res.statusCode}`);
   next(); // Passing the request to the next handler in the stack.
 };
