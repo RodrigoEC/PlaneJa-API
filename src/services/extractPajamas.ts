@@ -1,4 +1,5 @@
-import { regexPajamaContent } from "../util/const";
+import { regexPajamaContent, regexSemesterCourse } from "../util/const";
+import { throwExtractError } from "../util/errors";
 import { compareSubject } from "../util/util";
 
 export interface Schedule {
@@ -14,6 +15,13 @@ export interface Subject {
   workload: number;
   schedule: Array<Schedule[]>;
 }
+
+export interface Semester {
+  courseName: string;
+  semester: string;
+  classes: Subject[];
+}
+
 /**
  * This function recieves the text that's going to be extracted from the PDF uploaded
  * and extract data related to the Subject and Schedule.
@@ -24,11 +32,29 @@ export interface Subject {
  * @param text Text that's going to have data extracted.
  * @returns A list of the type Subject with the info that was retrieved.
  */
-export function extractPajamaSubjects(text: string): Subject[] {
+export function extractPajamaSubjects(text: string): Semester {
   const regexData = [...text.matchAll(regexPajamaContent)];
-  const filteredSubjects = {};
+  const classes = createClassesList(regexData);
 
-  regexData.forEach(([, id, name, credits, workload, ...schedule]) => {
+  const [semesterData] = [...text.matchAll(regexSemesterCourse)];
+  if (!semesterData) return throwExtractError(["curso", "semester"]);
+
+  return {
+    courseName: semesterData[1],
+    semester: semesterData[2],
+    classes,
+  };
+}
+
+/**
+ * This function transforms the regexList passed as parameter into a list of Subjects
+ *
+ * @param regexList List of the regex resulted from the features extracting in the function above.
+ * @returns A list of Subjects.
+ */
+const createClassesList = (regexList: RegExpMatchArray[]): Subject[] => {
+  const filteredSubjects = {};
+  regexList.forEach(([, id, name, credits, workload, ...schedule]) => {
     const subjectSchedule = [
       { day: schedule[0], init_time: schedule[1], end_time: schedule[2] },
       { day: schedule[3], init_time: schedule[4], end_time: schedule[5] },
@@ -57,4 +83,4 @@ export function extractPajamaSubjects(text: string): Subject[] {
   });
 
   return Object.values(filteredSubjects);
-}
+};

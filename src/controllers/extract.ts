@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { extractPajamaSubjects } from "../services/extractPajamas";
-import { extractRegexRecord } from "../services/extractRecords";
+import { extractPajamaSubjects, Semester } from "../services/extractPajamas";
+import { extractRegexRecord, GradRecord } from "../services/extractRecords";
 import { PDFWRONGCONTENT } from "../util/const";
 import { extractPDFText } from "../util/util";
 
@@ -15,15 +15,17 @@ import { extractPDFText } from "../util/util";
 const extractDefault = async (
   req: Request,
   res: Response,
-  processData: (text: string) => Array<any>
+  processData: (text: string) => Array<GradRecord> | Semester
 ) => {
   try {
     const file = req.file;
     if (!file) return res.status(404).send("Missing file (File) parameter");
 
     const text = await extractPDFText(file.path);
+
     const gradData = processData(text);
-    if (gradData.length === 0) return res.status(422).send(PDFWRONGCONTENT);
+    const classesList = "classes" in gradData ? gradData.classes : gradData;
+    if (classesList.length === 0) return res.status(422).send(PDFWRONGCONTENT);
 
     res.status(200).send(gradData);
   } catch (e) {
