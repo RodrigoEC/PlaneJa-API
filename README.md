@@ -12,7 +12,7 @@ Essa é a API da aplicação PlaneJá, meu TCC, e ela tem as seguintes funcional
 
 Dependências:
 
-- [NodeJS]](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04);
+- [NodeJS](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04);
 - [Git](https://www.atlassian.com/git/tutorials/install-git);
 
 Para executar o projeto execute os seguintes passos:
