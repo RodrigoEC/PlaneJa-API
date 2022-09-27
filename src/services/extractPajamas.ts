@@ -1,5 +1,5 @@
 import { regexPajamaContent, regexSemesterCourse } from "../util/const";
-import { throwExtractError } from "../util/errors";
+import { ExtractError } from "../util/errors";
 import { compareSubject } from "../util/util";
 
 export interface Schedule {
@@ -37,7 +37,7 @@ export function extractPajamaSubjects(text: string): Semester {
   const classes = createClassesList(regexData);
 
   const [semesterData] = [...text.matchAll(regexSemesterCourse)];
-  if (!semesterData) return throwExtractError(["curso", "semester"]);
+  if (!semesterData) throw new ExtractError();
 
   return {
     name: semesterData[1],

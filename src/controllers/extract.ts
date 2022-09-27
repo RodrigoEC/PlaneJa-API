@@ -18,18 +18,15 @@ const extractDefault = async (
   processData: (text: string) => Array<GradRecord> | Semester
 ) => {
   try {
-    const file = req.file;
+    const file = req["file"];
     if (!file) return res.status(404).send("Missing file (File) parameter");
 
     const text = await extractPDFText(file.path);
-
     const gradData = processData(text);
-    const classesList = "classes" in gradData ? gradData.classes : gradData;
-    if (classesList.length === 0) return res.status(422).send(PDFWRONGCONTENT);
 
     res.status(200).send(gradData);
   } catch (e) {
-    res.status(500).send(e.message);
+    res.status(e.statusCode ?? 500).send(e.message);
   }
 };
 

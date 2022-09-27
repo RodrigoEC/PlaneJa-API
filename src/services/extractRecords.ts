@@ -1,4 +1,5 @@
 import { regexRecord } from "../util/const";
+import { ExtractError } from "../util/errors";
 
 export interface GradRecord {
   id: number;
@@ -20,7 +21,7 @@ export interface GradRecord {
  */
 export function extractRegexRecord(text: string): GradRecord[] {
   const regexData = [...text.matchAll(regexRecord)];
-  return regexData.map(
+  const result = regexData.map(
     ([, id, name, type, credits, workload, grade, status, semester]) => {
       return {
         id: +id,
@@ -34,4 +35,7 @@ export function extractRegexRecord(text: string): GradRecord[] {
       };
     }
   );
+
+  if (result.length === 0) throw new ExtractError();
+  return result;
 }

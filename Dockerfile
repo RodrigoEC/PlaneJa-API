@@ -8,8 +8,6 @@ RUN npm i
 
 COPY . . 
 
-# COPY ./node_modules /app/node_modules
-
 RUN chown -R $user:$user /app
 
 USER $user

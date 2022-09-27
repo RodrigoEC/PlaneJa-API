@@ -1,10 +1,10 @@
-export const throwExtractError = (campos: string[]): never => {
-  let message = "Não foi extrair do arquivo enviado o(s) campo(s):";
+export class ExtractError extends Error {
+  statusCode = 422;
 
-  campos.forEach(
-    (campo, i) =>
-      (message = `${message} "${campo}"${i !== campos.length - 1 ? " e" : ""}`)
-  );
-
-  throw new Error(message + ".");
-};
+  constructor() {
+    const message =
+      "Algo de errado aconteceu: Não foi possível extrair dados do arquivo enviado";
+    super(message);
+    Object.setPrototypeOf(this, ExtractError.prototype);
+  }
+}
