@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { extractPajamaSubjects, Semester } from "../services/extractPajamas";
 import { extractRegexRecord, GradRecord } from "../services/extractRecords";
-import { PDFWRONGCONTENT } from "../util/const";
 import { extractPDFText } from "../util/util";
 
 /**
