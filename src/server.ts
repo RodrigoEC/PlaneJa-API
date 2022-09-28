@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { router } from "./routes";
+import { connectToDatabase } from "./services/db";
 
 dotenv.config();
 
@@ -24,4 +25,5 @@ app.use(cors());
 app.use(express.json());
 app.use(router);
 
+connectToDatabase();
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

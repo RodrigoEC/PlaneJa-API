@@ -21,9 +21,9 @@ const extractDefault = async (
     if (!file) return res.status(404).send("Missing file (File) parameter");
 
     const text = await extractPDFText(file.path);
-    const gradData = processData(text);
+    const gradData = await processData(text);
 
-    res.status(200).send(gradData);
+    res.status(201).send(gradData);
   } catch (e) {
     res.status(e.statusCode ?? 500).send(e.message);
   }
