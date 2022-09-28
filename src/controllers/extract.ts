@@ -14,7 +14,7 @@ import { extractPDFText } from "../util/util";
 const extractDefault = async (
   req: Request,
   res: Response,
-  processData: (text: string) => Array<GradRecord> | Semester
+  processData: (text: string) => Array<GradRecord> | Promise<Semester>
 ) => {
   try {
     const file = req["file"];

@@ -33,7 +33,7 @@ export interface Semester {
  * @param text Text that's going to have data extracted.
  * @returns A list of the type Subject with the info that was retrieved.
  */
-export async function extractPajamaSubjects(text: string): Semester {
+export async function extractPajamaSubjects(text: string): Promise<Semester> {
   const regexData = [...text.matchAll(regexPajamaContent)];
   const classes = createClassesList(regexData);
 
