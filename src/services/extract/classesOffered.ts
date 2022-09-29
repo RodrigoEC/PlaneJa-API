@@ -1,4 +1,3 @@
-import { fstat, write } from "fs";
 import { regexPajamaContent, regexSemesterCourse } from "../../util/const";
 import { ExtractError } from "../../util/errors";
 import { compareSubject } from "../../util/util";
