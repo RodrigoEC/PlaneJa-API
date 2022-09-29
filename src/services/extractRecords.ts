@@ -22,14 +22,45 @@ export interface GradRecord {
 export function extractRegexRecord(text: string): GradRecord[] {
   const regexData = [...text.matchAll(regexRecord)];
   const result = regexData.map(
-    ([, id, name, type, credits, workload, grade, status, semester]) => {
+    ([
+      ,
+      id,
+      name,
+      professors,
+      type,
+      creditsOne,
+      workloadOne,
+      gradeOne,
+      creditsTwo,
+      workloadTwo,
+      gradeTwo,
+      creditsThree,
+      workloadThree,
+      gradeThree,
+      creditsFour,
+      workloadFour,
+      gradeFour,
+      status,
+      semester,
+    ]) => {
+      const professorsList = professors ? professors.split("|") : [];
+
       return {
         id: +id,
         name: name.substring(0, name.length - 1).trim(),
+        professors: professorsList,
         type,
-        credits: +credits,
-        workload: +workload,
-        grade: +grade.replace(",", "."),
+        credits: +(creditsOne || creditsTwo || creditsThree || creditsFour),
+        workload: +(
+          workloadOne ||
+          workloadTwo ||
+          workloadThree ||
+          workloadFour
+        ),
+        grade: +(gradeOne || gradeTwo || gradeThree || gradeFour).replace(
+          ",",
+          "."
+        ),
         status,
         semester,
       };

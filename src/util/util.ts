@@ -12,7 +12,7 @@ import { Schedule } from "../services/extractPajamas";
 export async function extractPDFText(pdfPath: string): Promise<string> {
   const dataBuffer = fs.readFileSync(pdfPath);
   const { text } = await pdf(dataBuffer);
-  return text.replace(/(\r\n|\n|\r)/gm, "");
+  return text.replace(/(\r\n|\n|\r)/gm, "|");
 }
 
 export const compareSubject = (
