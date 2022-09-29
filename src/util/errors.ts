@@ -1,9 +1,8 @@
 export class ExtractError extends Error {
   statusCode = 422;
 
-  constructor() {
-    const message =
-      "Algo de errado aconteceu: Não foi possível extrair dados do arquivo enviado";
+  constructor(dataType: string) {
+    const message = `Algo de errado aconteceu: Não foi possível extrair dados do arquivo enviado.\n Tipo do dado: ${dataType}`;
     super(message);
     Object.setPrototypeOf(this, ExtractError.prototype);
   }

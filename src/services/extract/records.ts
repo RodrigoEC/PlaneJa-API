@@ -1,5 +1,5 @@
-import { regexRecord } from "../util/const";
-import { ExtractError } from "../util/errors";
+import { regexRecord } from "../../util/const";
+import { ExtractError } from "../../util/errors";
 
 export interface GradRecord {
   id: number;
@@ -20,6 +20,8 @@ export interface GradRecord {
  * @returns A list of the type GradRecord with the info that was retrieved.
  */
 export function extractRegexRecord(text: string): GradRecord[] {
+  text = text.replace(/(\r\n|\n|\r)/gm, " |");
+
   const regexData = [...text.matchAll(regexRecord)];
   const result = regexData.map(
     ([
@@ -47,7 +49,7 @@ export function extractRegexRecord(text: string): GradRecord[] {
 
       return {
         id: +id,
-        name: name.substring(0, name.length - 1).trim(),
+        name: name.substring(0, name.length).trim(),
         professors: professorsList,
         type,
         credits: +(creditsOne || creditsTwo || creditsThree || creditsFour),
@@ -67,6 +69,6 @@ export function extractRegexRecord(text: string): GradRecord[] {
     }
   );
 
-  if (result.length === 0) throw new ExtractError();
+  if (result.length === 0) throw new ExtractError("Cadeiras do histórico");
   return result;
 }

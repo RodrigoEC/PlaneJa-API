@@ -6,5 +6,5 @@ import { extractPajama, extractRecord } from "./controllers/extract";
 export const router = express.Router();
 const upload = multer({ dest: os.tmpdir() });
 
-router.post("/extract/record", upload.single("file"), extractRecord);
-router.post("/extract/pajama", upload.single("file"), extractPajama);
+router.post("/extract/records", upload.single("file"), extractRecord);
+router.post("/extract/classes-offered", upload.single("file"), extractPajama);

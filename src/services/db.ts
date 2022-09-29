@@ -1,6 +1,6 @@
 import * as mongoDB from "mongodb";
 import { CourseNotCreated, CourseNotFound } from "../util/errors";
-import { Semester } from "./extractPajamas";
+import { Semester } from "./extract/classesOffered";
 
 export const collections: { classesOffered?: mongoDB.Collection } = {};
 

@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
-import { extractPajamaSubjects, Semester } from "../services/extractPajamas";
-import { extractRegexRecord, GradRecord } from "../services/extractRecords";
+import {
+  extractClassesOffered,
+  Semester,
+} from "../services/extract/classesOffered";
+import { extractRegexRecord, GradRecord } from "../services/extract/records";
 import { extractPDFText } from "../util/util";
 
 /**
@@ -34,5 +37,5 @@ export const extractRecord = async (req: Request, res: Response) => {
 };
 
 export const extractPajama = async (req: Request, res: Response) => {
-  extractDefault(req, res, extractPajamaSubjects);
+  extractDefault(req, res, extractClassesOffered);
 };

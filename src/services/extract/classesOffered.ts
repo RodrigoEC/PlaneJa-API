@@ -1,7 +1,8 @@
-import { regexPajamaContent, regexSemesterCourse } from "../util/const";
-import { ExtractError } from "../util/errors";
-import { compareSubject } from "../util/util";
-import { insertClassesOffered } from "./db";
+import { fstat, write } from "fs";
+import { regexPajamaContent, regexSemesterCourse } from "../../util/const";
+import { ExtractError } from "../../util/errors";
+import { compareSubject } from "../../util/util";
+import { insertClassesOffered } from "../db";
 
 export interface Schedule {
   day: string;
@@ -33,12 +34,15 @@ export interface Semester {
  * @param text Text that's going to have data extracted.
  * @returns A list of the type Subject with the info that was retrieved.
  */
-export async function extractPajamaSubjects(text: string): Promise<Semester> {
+export async function extractClassesOffered(text: string): Promise<Semester> {
+  text = text.replace(/(\r\n|\n|\r)/gm, " ");
+
   const regexData = [...text.matchAll(regexPajamaContent)];
   const classes = createClassesList(regexData);
+  if (!classes) throw new ExtractError("Cadeiras do pijama");
 
   const [semesterData] = [...text.matchAll(regexSemesterCourse)];
-  if (!semesterData) throw new ExtractError();
+  if (!semesterData) throw new ExtractError("Nome do curso e semestre");
   const semester = {
     name: semesterData[1],
     semester: semesterData[2],

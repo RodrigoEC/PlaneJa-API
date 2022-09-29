@@ -1,6 +1,6 @@
 import fs from "fs";
 import pdf from "pdf-parse";
-import { Schedule } from "../services/extractPajamas";
+import { Schedule } from "../services/extract/classesOffered";
 
 /**
  * This function uses pdf-parse lib (https://www.npmjs.com/package/pdf-parse) to extract
@@ -12,7 +12,7 @@ import { Schedule } from "../services/extractPajamas";
 export async function extractPDFText(pdfPath: string): Promise<string> {
   const dataBuffer = fs.readFileSync(pdfPath);
   const { text } = await pdf(dataBuffer);
-  return text.replace(/(\r\n|\n|\r)/gm, "|");
+  return text;
 }
 
 export const compareSubject = (
