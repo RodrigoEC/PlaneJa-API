@@ -23,12 +23,17 @@ export async function connectToDatabase() {
 
 export const getClassesOffered = async (course: string, semester: string) => {
   const query = { name: course, semester };
-  const result = await collections.classesOffered?.findOne(query);
-  if (!result) throw new CourseNotFound(course, semester);
-  return result;
+  return (await collections.classesOffered?.findOne(query)) ?? {};
 };
 
 export const insertClassesOffered = async (classesOffered: Semester) => {
-  const result = await collections.classesOffered?.insertOne(classesOffered);
+  const { name, semester }: { name: string; semester: string } = classesOffered;
+  const query = { name, semester };
+  const options = { upsert: true };
+  const result = await collections.classesOffered?.replaceOne(
+    query,
+    classesOffered,
+    options
+  );
   if (!result) throw new CourseNotCreated(classesOffered.name);
 };

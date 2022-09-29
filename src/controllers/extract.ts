@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { insertClassesOffered } from "../services/db";
 import {
   extractClassesOffered,
+  registerClassesOffered,
   Semester,
 } from "../services/extract/classesOffered";
 import { extractRegexRecord, GradRecord } from "../services/extract/records";
@@ -26,7 +27,6 @@ const extractDefault = async (
 
     const text = await extractPDFText(file.path);
     const gradData = await processData(text);
-    await insertClassesOffered(gradData as Semester);
 
     res.status(201).send(gradData);
   } catch (e) {
@@ -39,5 +39,5 @@ export const extractRecord = async (req: Request, res: Response) => {
 };
 
 export const extractPajama = async (req: Request, res: Response) => {
-  extractDefault(req, res, extractClassesOffered);
+  extractDefault(req, res, registerClassesOffered);
 };

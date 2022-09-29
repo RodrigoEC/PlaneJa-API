@@ -1,6 +1,7 @@
 import { regexPajamaContent, regexSemesterCourse } from "../../util/const";
 import { ExtractError } from "../../util/errors";
-import { compareSubject } from "../../util/util";
+import { capitalize, compareSubject } from "../../util/util";
+import { getClassesOffered, insertClassesOffered } from "../db";
 
 export interface Schedule {
   day: string;
@@ -42,13 +43,21 @@ export async function extractClassesOffered(text: string): Promise<Semester> {
   const [semesterData] = [...text.matchAll(regexSemesterCourse)];
   if (!semesterData) throw new ExtractError("Nome do curso e semestre");
   const semester: Semester = {
-    name: semesterData[1],
+    name: capitalize(semesterData[1]),
     semester: semesterData[2],
     classes,
   };
 
   return semester;
 }
+
+export const registerClassesOffered = async (
+  text: string
+): Promise<Semester> => {
+  const classesOffered = await extractClassesOffered(text);
+  await insertClassesOffered(classesOffered as Semester);
+  return classesOffered;
+};
 
 /**
  * This function transforms the regexList passed as parameter into a list of Subjects
@@ -78,7 +87,7 @@ const createClassesList = (regexList: RegExpMatchArray[]): Subject[] => {
     } else {
       filteredSubjects[id] = {
         id: +id,
-        name: name.substring(0, name.length).trim(),
+        name: capitalize(name.substring(0, name.length).trim()),
         credits: +credits,
         workload: +workload,
         schedule: [subjectSchedule],
