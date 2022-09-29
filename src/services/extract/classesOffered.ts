@@ -60,44 +60,33 @@ export async function extractClassesOffered(text: string): Promise<Semester> {
  */
 const createClassesList = (regexList: RegExpMatchArray[]): Subject[] => {
   const filteredSubjects = {};
-  regexList.forEach(
-    ([
-      ,
-      id,
-      name,
-      largeCredit,
-      largeWorkload,
-      credits,
-      workload,
-      ...schedule
-    ]) => {
-      const subjectSchedule = [
-        { day: schedule[0], init_time: schedule[1], end_time: schedule[2] },
-        { day: schedule[3], init_time: schedule[4], end_time: schedule[5] },
-      ];
+  regexList.forEach(([, id, name, credits, workload, ...schedule]) => {
+    const subjectSchedule = [
+      { day: schedule[0], init_time: schedule[1], end_time: schedule[2] },
+      { day: schedule[3], init_time: schedule[4], end_time: schedule[5] },
+    ];
 
-      if (id in filteredSubjects) {
-        let hasSubjects = false;
-        filteredSubjects[id].schedule.forEach((element) => {
-          if (
-            (compareSubject(element[0], subjectSchedule[0]),
-            compareSubject(element[1], subjectSchedule[1]))
-          ) {
-            hasSubjects = true;
-          }
-        });
-        if (!hasSubjects) filteredSubjects[id].schedule.push(subjectSchedule);
-      } else {
-        filteredSubjects[id] = {
-          id: +id,
-          name: name.substring(0, name.length).trim(),
-          credits: largeCredit ? +largeCredit : +credits,
-          workload: largeWorkload ? +largeWorkload : +workload,
-          schedule: [subjectSchedule],
-        };
-      }
+    if (id in filteredSubjects) {
+      let hasSubjects = false;
+      filteredSubjects[id].schedule.forEach((element) => {
+        if (
+          (compareSubject(element[0], subjectSchedule[0]),
+          compareSubject(element[1], subjectSchedule[1]))
+        ) {
+          hasSubjects = true;
+        }
+      });
+      if (!hasSubjects) filteredSubjects[id].schedule.push(subjectSchedule);
+    } else {
+      filteredSubjects[id] = {
+        id: +id,
+        name: name.substring(0, name.length).trim(),
+        credits: +credits,
+        workload: +workload,
+        schedule: [subjectSchedule],
+      };
     }
-  );
+  });
 
   return Object.values(filteredSubjects);
 };
