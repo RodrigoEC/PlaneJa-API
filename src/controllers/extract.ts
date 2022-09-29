@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { insertClassesOffered } from "../services/db";
 import {
   extractClassesOffered,
   Semester,
@@ -25,6 +26,7 @@ const extractDefault = async (
 
     const text = await extractPDFText(file.path);
     const gradData = await processData(text);
+    await insertClassesOffered(gradData as Semester);
 
     res.status(201).send(gradData);
   } catch (e) {
