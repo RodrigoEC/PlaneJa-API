@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-import { insertClassesOffered } from "../services/db";
 import {
-  extractClassesOffered,
   registerClassesOffered,
   Semester,
 } from "../services/extract/classesOffered";
