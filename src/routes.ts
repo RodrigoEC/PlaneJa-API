@@ -10,7 +10,7 @@ import {
 export const router = express.Router();
 const upload = multer({ dest: os.tmpdir() });
 
-router.post("/extract/records", upload.single("file"), extractRecord);
-router.post("/extract/classes-offered", upload.single("file"), extractPajama);
-router.post("/retrieve/classes-offered", retrieveClassesOffered);
+router.post("/records", upload.single("file"), extractRecord);
+router.post("/classes-offered", upload.single("file"), extractPajama);
+router.get("/classes-offered", retrieveClassesOffered);
 router.delete("/classes-offered", excludeClassesOffered);
