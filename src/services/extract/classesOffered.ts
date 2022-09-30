@@ -51,6 +51,13 @@ export async function extractClassesOffered(text: string): Promise<Semester> {
   return semester;
 }
 
+/**
+ * Function that estracts the text enteties and insert the classes
+ * offered in the database.
+ *
+ * @param text Text that's going to have their properties extracted
+ * @returns Object of the type Semester
+ */
 export const registerClassesOffered = async (
   text: string
 ): Promise<Semester> => {

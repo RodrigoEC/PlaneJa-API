@@ -4,6 +4,10 @@ import { Semester } from "./extract/classesOffered";
 
 export const collections: { classesOffered?: mongoDB.Collection } = {};
 
+/**
+ * Function responsible for connecting the backend to the database and set the collection's
+ * database key "ClassesOffered".
+ */
 export async function connectToDatabase() {
   const client: mongoDB.MongoClient = new mongoDB.MongoClient(
     process.env.DATABASE_URL as string
@@ -21,8 +25,8 @@ export async function connectToDatabase() {
   );
 }
 
-export const getClassesOffered = async (course: string, semester: string) => {
-  const query = { name: course, semester };
+export const getClassesOffered = async (name: string, semester: string) => {
+  const query = { name, semester };
   return (await collections.classesOffered?.findOne(query)) ?? {};
 };
 
