@@ -1,26 +1,27 @@
 import { regexPajamaContent, regexSemesterCourse } from "../../util/const";
 import { ExtractError } from "../../util/errors";
-import { capitalize, compareSubject } from "../../util/util";
-import { getClassesOffered, insertClassesOffered } from "../db";
-
-export interface Schedule {
-  day: string;
-  init_time: string;
-  end_time: string;
-}
-
-export interface Subject {
-  id: number;
-  name: string;
-  credits: number;
-  workload: number;
-  schedule: Array<Schedule[]>;
-}
+import { capitalize } from "../../util/util";
+import { insertClassesOffered } from "../db";
 
 export interface Semester {
   name: string;
   semester: string;
   classes: Subject[];
+}
+
+export interface Subject {
+  id: number;
+  name: string;
+  class_num: number;
+  credits: number;
+  workload: number;
+  schedule: Schedule[];
+}
+
+export interface Schedule {
+  day: string;
+  init_time: string;
+  end_time: string;
 }
 
 /**
@@ -35,7 +36,6 @@ export interface Semester {
  */
 export async function extractClassesOffered(text: string): Promise<Semester> {
   text = text.replace(/(\r\n|\n|\r)/gm, " ");
-
   const regexData = [...text.matchAll(regexPajamaContent)];
   const classes = createClassesList(regexData);
   if (!classes) throw new ExtractError("Cadeiras do pijama");
@@ -63,6 +63,7 @@ export const registerClassesOffered = async (
 ): Promise<Semester> => {
   const classesOffered = await extractClassesOffered(text);
   await insertClassesOffered(classesOffered as Semester);
+
   return classesOffered;
 };
 
@@ -73,34 +74,35 @@ export const registerClassesOffered = async (
  * @returns A list of Subjects.
  */
 const createClassesList = (regexList: RegExpMatchArray[]): Subject[] => {
-  const filteredSubjects = {};
-  regexList.forEach(([, id, name, credits, workload, ...schedule]) => {
-    const subjectSchedule = [
-      { day: schedule[0], init_time: schedule[1], end_time: schedule[2] },
-      { day: schedule[3], init_time: schedule[4], end_time: schedule[5] },
-    ];
+  return regexList.map(
+    ([, id, name, classNum, credits, workload, ...schedule]) => {
+      const subjectSchedule = createScheduleList(schedule);
 
-    if (id in filteredSubjects) {
-      let hasSubjects = false;
-      filteredSubjects[id].schedule.forEach((element) => {
-        if (
-          (compareSubject(element[0], subjectSchedule[0]),
-          compareSubject(element[1], subjectSchedule[1]))
-        ) {
-          hasSubjects = true;
-        }
-      });
-      if (!hasSubjects) filteredSubjects[id].schedule.push(subjectSchedule);
-    } else {
-      filteredSubjects[id] = {
+      return {
         id: +id,
         name: capitalize(name.substring(0, name.length).trim()),
+        class_num: +classNum,
         credits: +credits,
         workload: +workload,
-        schedule: [subjectSchedule],
+        schedule: subjectSchedule,
       };
     }
-  });
+  );
+};
 
-  return Object.values(filteredSubjects);
+const createScheduleList = (schedule: string[]): Schedule[] => {
+  const subjectSchedule: Schedule[] = [];
+
+  for (let i = 0; i < schedule.length; i += 3) {
+    if (schedule[i]) {
+      const currentSchedule: Schedule = {
+        day: schedule[i],
+        init_time: schedule[i + 1],
+        end_time: schedule[i + 2],
+      };
+      subjectSchedule.push(currentSchedule);
+    }
+  }
+
+  return subjectSchedule;
 };
