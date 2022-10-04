@@ -8,7 +8,6 @@ const NOPARAMSERROR =
 export const retrieveClassesOffered = async (req: Request, res: Response) => {
   try {
     const { name, semester }: { name: string; semester: string } = req.body;
-    if (!name || !semester) res.status(400).send(NOPARAMSERROR);
 
     const classesOffered = await getClassesOffered(capitalize(name), semester);
 

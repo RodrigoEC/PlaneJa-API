@@ -36,6 +36,7 @@ export interface Schedule {
  */
 export async function extractClassesOffered(text: string): Promise<Semester> {
   text = text.replace(/(\r\n|\n|\r)/gm, " ");
+
   const regexData = [...text.matchAll(regexPajamaContent)];
   const classes = createClassesList(regexData);
   if (!classes) throw new ExtractError("Cadeiras do pijama");

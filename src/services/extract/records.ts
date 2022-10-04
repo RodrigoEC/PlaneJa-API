@@ -45,7 +45,7 @@ export function extractRegexRecord(text: string): GradRecord[] {
       status,
       semester,
     ]) => {
-      const professorsList = professors ? professors.split("|") : [];
+      const professorsList = professors ? professors.split(" |") : [];
 
       return {
         id: +id,
@@ -63,7 +63,7 @@ export function extractRegexRecord(text: string): GradRecord[] {
           ",",
           "."
         ),
-        status,
+        status: status.replace(/ \|/g, " ").trim(),
         semester,
       };
     }
