@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
-import {
-  registerClassesOffered,
-  Semester,
-} from "../services/extract/classesOffered";
-import { extractRegexRecord, GradRecord } from "../services/extract/records";
+import { Semester } from "../services/extract/classesOffered";
+import { GradRecord } from "../services/extract/records";
 import { extractPDFText } from "../util/util";
 
 /**
@@ -14,7 +11,7 @@ import { extractPDFText } from "../util/util";
  * @param processData Function that's going to be used to extract the data
  * from the text extracted from the PDF file
  */
-const extractDefault = async (
+export const extractText = async (
   req: Request,
   res: Response,
   processData: (text: string) => Array<GradRecord> | Promise<Semester>
@@ -30,12 +27,4 @@ const extractDefault = async (
   } catch (e) {
     res.status(e.statusCode ?? 500).send(e.message);
   }
-};
-
-export const extractRecord = async (req: Request, res: Response) => {
-  extractDefault(req, res, extractRegexRecord);
-};
-
-export const extractPajama = async (req: Request, res: Response) => {
-  extractDefault(req, res, registerClassesOffered);
 };

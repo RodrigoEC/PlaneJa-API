@@ -1,9 +1,22 @@
 import { Request, Response } from "express";
+import { extractText } from ".";
+import { registerClassesOffered } from "../services/extract/classesOffered";
 import { deleteClassesOffered, getClassesOffered } from "../services/db";
 import { capitalize } from "../util/util";
 
 const NOPARAMSERROR =
   "Paramêtros name (string) ou semester (string não foram enviados";
+
+/**
+ * This function extracts the text from a classes offered file that is send
+ * as part of the request object.
+ *
+ * @param req request object containing the request parameters
+ * @param res Response object
+ */
+export const extractClassesOffered = async (req: Request, res: Response) => {
+  extractText(req, res, registerClassesOffered);
+};
 
 export const retrieveClassesOffered = async (req: Request, res: Response) => {
   try {
