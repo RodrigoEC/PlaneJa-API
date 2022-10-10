@@ -64,7 +64,8 @@ export function extractRegexRecord(text: string): GradRecord[] {
   text = text.replace(/(\r\n|\n|\r)/gm, " |");
 
   const regexData = [...text.matchAll(regexRecord)];
-  const result = regexData.map(
+  const resultGrade = {};
+  regexData.forEach(
     ([
       ,
       id,
@@ -87,8 +88,7 @@ export function extractRegexRecord(text: string): GradRecord[] {
       semester,
     ]) => {
       const professorsList = professors ? professors.split(" |") : [];
-
-      return {
+      const subjectData = {
         id: +id,
         name: name.substring(0, name.length).trim(),
         professors: professorsList,
@@ -107,9 +107,19 @@ export function extractRegexRecord(text: string): GradRecord[] {
         status: status.replace(/ \|/g, " ").trim(),
         semester,
       };
+
+      const subjectName = subjectData.name;
+      if (
+        (subjectName in Object.values(resultGrade) &&
+          resultGrade[subjectName].status !== "Aprovado") ||
+        !(subjectName in Object.values(resultGrade))
+      ) {
+        resultGrade[subjectName] = subjectData;
+      }
     }
   );
 
+  const result: GradRecord[] = Object.values(resultGrade);
   if (result.length === 0) throw new ExtractError("Cadeiras do histórico");
   return result;
 }
