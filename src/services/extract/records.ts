@@ -5,6 +5,7 @@ export interface StudentRecord {
   progress: string;
   compulsorySubjects: number;
   optionalSubjects: number;
+  complement: number;
   subjects: GradRecord[];
 }
 
@@ -22,12 +23,13 @@ export interface GradRecord {
 export const getStudentRecord = (text: string): StudentRecord => {
   const subjects = extractRegexRecord(text);
 
-  const [compulsory, optional] = countSubjectTypes(subjects);
+  const [compulsory, optional, complement] = countSubjectTypes(subjects);
   const progress = calculateStudentProgress(compulsory + optional);
   return {
     progress,
     compulsorySubjects: compulsory,
     optionalSubjects: optional,
+    complement,
     subjects,
   };
 };
@@ -43,14 +45,16 @@ const calculateStudentProgress = (workload: number): string => {
 const countSubjectTypes = (subjects: GradRecord[]): number[] => {
   let compulsory = 0;
   let optional = 0;
+  let complement = 0;
   subjects.forEach((subject) => {
     if (subject.status === "Aprovado" || subject.status === "Dispensa") {
       if (subject.type === "Obrigatória") compulsory += subject.credits;
       else if (subject.type === "Optativa") optional += subject.credits;
+      else if (subject.type === "Complementar") complement += subject.credits;
     }
   });
 
-  return [compulsory, optional];
+  return [compulsory, optional, complement];
 };
 
 /**
