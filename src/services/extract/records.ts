@@ -1,5 +1,12 @@
-import { regexRecord } from "../../util/const";
+import { progressParameter, regexRecord } from "../../util/const";
 import { ExtractError } from "../../util/errors";
+
+export interface StudentRecord {
+  progress: string;
+  compulsorySubjects: number;
+  optionalSubjects: number;
+  subjects: GradRecord[];
+}
 
 export interface GradRecord {
   id: number;
@@ -11,6 +18,40 @@ export interface GradRecord {
   status: string;
   semester: string;
 }
+
+export const getStudentRecord = (text: string): StudentRecord => {
+  const subjects = extractRegexRecord(text);
+
+  const [compulsory, optional] = countSubjectTypes(subjects);
+  const progress = calculateStudentProgress(compulsory + optional);
+  return {
+    progress,
+    compulsorySubjects: compulsory,
+    optionalSubjects: optional,
+    subjects,
+  };
+};
+
+const calculateStudentProgress = (workload: number): string => {
+  const sumTotalWorkload = Object.values(
+    progressParameter["Ciência Da Computação"]
+  ).reduce((partialSum, a) => partialSum + a, 0);
+
+  return (workload / sumTotalWorkload).toFixed(1);
+};
+
+const countSubjectTypes = (subjects: GradRecord[]): number[] => {
+  let compulsory = 0;
+  let optional = 0;
+  subjects.forEach((subject) => {
+    if (subject.status === "Aprovado" || subject.status === "Dispensa") {
+      if (subject.type === "Obrigatória") compulsory += subject.credits;
+      else if (subject.type === "Optativa") optional += subject.credits;
+    }
+  });
+
+  return [compulsory, optional];
+};
 
 /**
  * This function recieves the text that's going to be extracted from the PDF uploaded

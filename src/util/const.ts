@@ -10,6 +10,6 @@ export const regexSemesterCourse = /\d{5} - (.*?) - D Período: (\d{4}.\d)/g;
 export const progressParameter = {
   "Ciência Da Computação": {
     obrigatório: 132,
-    optativa: 40,
+    optativa: 56,
   },
 };
