@@ -1,12 +1,22 @@
-import { progressParameter, regexRecord } from "../../util/const";
+import {
+  progressParameter,
+  regexCourseNameRecord,
+  regexRecord,
+} from "../../util/const";
 import { ExtractError } from "../../util/errors";
+import { capitalize } from "../../util/util";
 
 export interface StudentRecord {
+  course: string;
   progress: string;
-  compulsorySubjects: number;
-  optionalSubjects: number;
-  complement: number;
+  subjects_progress: SubjectTypes;
   subjects: GradRecord[];
+}
+
+export interface SubjectTypes {
+  compulsory: number;
+  optional: number;
+  complementary: number;
 }
 
 export interface GradRecord {
@@ -22,39 +32,49 @@ export interface GradRecord {
 
 export const getStudentRecord = (text: string): StudentRecord => {
   const subjects = extractRegexRecord(text);
+  const course = capitalize([...text.matchAll(regexCourseNameRecord)][0][1]);
 
-  const [compulsory, optional, complement] = countSubjectTypes(subjects);
-  const progress = calculateStudentProgress(compulsory + optional);
+  const subjects_progress = countSubjectTypes(subjects);
+  const progress = calculateStudentProgress(
+    subjects_progress.compulsory + subjects_progress.optional,
+    course
+  );
   return {
+    course,
     progress,
-    compulsorySubjects: compulsory,
-    optionalSubjects: optional,
-    complement,
+    subjects_progress,
     subjects,
   };
 };
 
-const calculateStudentProgress = (workload: number): string => {
-  const sumTotalWorkload = Object.values(
-    progressParameter["Ciência Da Computação"]
-  ).reduce((partialSum, a) => partialSum + a, 0);
+const calculateStudentProgress = (workload: number, course: string): string => {
+  const couseProgress: [] = progressParameter[course] || { workload };
+
+  const sumTotalWorkload = Object.values(couseProgress).reduce(
+    (partialSum, a) => partialSum + a,
+    0
+  );
 
   return (workload / sumTotalWorkload).toFixed(1);
 };
 
-const countSubjectTypes = (subjects: GradRecord[]): number[] => {
-  let compulsory = 0;
-  let optional = 0;
-  let complement = 0;
+const countSubjectTypes = (subjects: GradRecord[]): SubjectTypes => {
+  const subjectsTypes = {
+    Obrigatória: 0,
+    Optativa: 0,
+    Complementar: 0,
+  };
   subjects.forEach((subject) => {
     if (subject.status === "Aprovado" || subject.status === "Dispensa") {
-      if (subject.type === "Obrigatória") compulsory += subject.credits;
-      else if (subject.type === "Optativa") optional += subject.credits;
-      else if (subject.type === "Complementar") complement += subject.credits;
+      subjectsTypes[subject.type] += subject.credits;
     }
   });
 
-  return [compulsory, optional, complement];
+  return {
+    compulsory: subjectsTypes["Obrigatória"],
+    optional: subjectsTypes["Optativa"],
+    complementary: subjectsTypes["Complementar"],
+  };
 };
 
 /**

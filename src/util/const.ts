@@ -7,6 +7,8 @@ export const regexPajamaContent =
 
 export const regexSemesterCourse = /\d{5} - (.*?) - D Período: (\d{4}.\d)/g;
 
+export const regexCourseNameRecord = /Curso: (.*?) - \w \(.*?\)/g;
+
 export const progressParameter = {
   "Ciência Da Computação": {
     obrigatório: 132,
