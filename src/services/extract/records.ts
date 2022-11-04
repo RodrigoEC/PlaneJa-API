@@ -139,8 +139,8 @@ const sliptProgress = (progressArray): string[] => {
   const progress = progressArray[1].trim();
 
   if (progress.length > 5) {
-    return [progress.slice(0, 3), progress.slice(3)];
+    return [progress.slice(3,), progress.slice(0, 3)];
   } else {
-    return [progress.slice(0, 2), progress.slice(2)];
+    return [progress.slice(2,), progress.slice(0, 2)];
   }
 };
