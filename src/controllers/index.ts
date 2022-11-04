@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Semester } from "../services/extract/classesOffered";
-import { StudentRecord } from "../services/extract/records";
+import { Record } from "../services/extract/records";
 import { extractPDFText } from "../util/util";
 
 /**
@@ -14,7 +14,7 @@ import { extractPDFText } from "../util/util";
 export const extractText = async (
   req: Request,
   res: Response,
-  processData: (text: string) => StudentRecord | Promise<Semester>
+  processData: (text: string) => Record | Promise<Semester>
 ) => {
   try {
     const file = req["file"];

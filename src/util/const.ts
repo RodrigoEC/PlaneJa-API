@@ -5,9 +5,11 @@ export const regexRecord =
 export const regexPajamaContent =
   /(?:(?:Professores:|\d{1,2}) (?:[0-9]{7}) - (?:(?![0-9]{7}).*?))? ([0-9]{7}) - ((?![0-9]{7}).*?)(\d{2}) (\d{1,2}) (\d{2,3}) (?:(\d) (\d{2}:\d{2})-(\d{2}:\d{2}) \(.*?\))?(?:(\d) (\d{2}:\d{2})-(\d{2}:\d{2}) \(.*?\))?(?:(\d) (\d{2}:\d{2})-(\d{2}:\d{2}) \(.*?\))?(?:(\d) (\d{2}:\d{2})-(\d{2}:\d{2}) \(.*?\))?/g;
 
+export const regexStudentStatus = /(?:Obrigatórias|Optativas|Atividades complementares)(?:.*?\(.*?\))(.*?)\(.*?\)/g;
+
 export const regexSemesterCourse = /\d{5} - (.*?) - D Período: (\d{4}.\d)/g;
 
-export const regexCourseNameRecord = /Curso: (.*?) - \w \(.*?\)/g;
+export const regexStudentData = /Aluno: (.*?) (.*?)CPF:.*Curso: (.*?) -/g
 
 export const progressParameter = {
   "Ciência Da Computação": {

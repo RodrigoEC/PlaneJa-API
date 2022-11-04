@@ -1,22 +1,24 @@
 import {
-  progressParameter,
-  regexCourseNameRecord,
   regexRecord,
+  regexStudentData,
+  regexStudentStatus,
 } from "../../util/const";
 import { ExtractError } from "../../util/errors";
 import { capitalize } from "../../util/util";
 
-export interface StudentRecord {
-  course: string;
-  progress: string;
-  subjects_progress: SubjectTypes;
-  subjects: GradRecord[];
+export interface Status {
+  mandatory: string[];
+  optative: string[];
+  complementary: string[];
 }
 
-export interface SubjectTypes {
-  compulsory: number;
-  optional: number;
-  complementary: number;
+export interface Record {
+  name: string;
+  enrollment_number: string;
+  course: string;
+  status: Status;
+  progress: string;
+  classes: GradRecord[];
 }
 
 export interface GradRecord {
@@ -30,51 +32,16 @@ export interface GradRecord {
   semester: string;
 }
 
-export const getStudentRecord = (text: string): StudentRecord => {
-  const subjects = extractRegexRecord(text);
-  const course = capitalize([...text.matchAll(regexCourseNameRecord)][0][1]);
+const calculateStudentProgress = (progresses: RegExpMatchArray[]): string => {
+  let current = 0;
+  let max = 0;
 
-  const subjects_progress = countSubjectTypes(subjects);
-  const progress = calculateStudentProgress(
-    subjects_progress.compulsory + subjects_progress.optional,
-    course
-  );
-  return {
-    course,
-    progress,
-    subjects_progress,
-    subjects,
-  };
-};
+  progresses.forEach((progress) => {
+    current += Number(progress[1]);
+    max += Number(progress[0]);
+  })
 
-const calculateStudentProgress = (workload: number, course: string): string => {
-  const couseProgress: [] = progressParameter[course] || { workload };
-
-  const sumTotalWorkload = Object.values(couseProgress).reduce(
-    (partialSum, a) => partialSum + a,
-    0
-  );
-
-  return (workload / sumTotalWorkload).toFixed(1);
-};
-
-const countSubjectTypes = (subjects: GradRecord[]): SubjectTypes => {
-  const subjectsTypes = {
-    Obrigatória: 0,
-    Optativa: 0,
-    Complementar: 0,
-  };
-  subjects.forEach((subject) => {
-    if (subject.status === "Aprovado" || subject.status === "Dispensa") {
-      subjectsTypes[subject.type] += subject.credits;
-    }
-  });
-
-  return {
-    compulsory: subjectsTypes["Obrigatória"],
-    optional: subjectsTypes["Optativa"],
-    complementary: subjectsTypes["Complementar"],
-  };
+  return (current/max).toFixed(2);
 };
 
 /**
@@ -84,7 +51,7 @@ const countSubjectTypes = (subjects: GradRecord[]): SubjectTypes => {
  * @param text Text that's going to have data extracted.
  * @returns A list of the type GradRecord with the info that was retrieved.
  */
-export function extractRegexRecord(text: string): GradRecord[] {
+export function extractRegexRecord(text: string): Record {
   text = text.replace(/(\r\n|\n|\r)/gm, " |");
 
   const regexData = [...text.matchAll(regexRecord)];
@@ -145,5 +112,32 @@ export function extractRegexRecord(text: string): GradRecord[] {
 
   const result: GradRecord[] = Object.values(resultGrade);
   if (result.length === 0) throw new ExtractError("Cadeiras do histórico");
-  return result;
+
+  const studentStatus = [...text.matchAll(regexStudentStatus)];
+  const status = {
+    mandatory: sliptProgress(studentStatus[0]),
+    optative: sliptProgress(studentStatus[1]),
+    complementary: sliptProgress(studentStatus[2]),
+  };
+
+  const [studentData] = [...text.matchAll(regexStudentData)];
+
+  return {
+    name: capitalize(studentData[2]),
+    enrollment_number: studentData[1],
+    course: capitalize(studentData[3]),
+    progress: calculateStudentProgress(Object.values(status)),
+    status,
+    classes: result,
+  };
 }
+
+const sliptProgress = (progressArray): string[] => {
+  const progress = progressArray[1].trim();
+
+  if (progress.length > 5) {
+    return [progress.slice(0, 3), progress.slice(3)];
+  } else {
+    return [progress.slice(0, 2), progress.slice(2)];
+  }
+};
