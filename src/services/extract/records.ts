@@ -39,9 +39,9 @@ const calculateStudentProgress = (progresses: RegExpMatchArray[]): string => {
   progresses.forEach((progress) => {
     current += Number(progress[1]);
     max += Number(progress[0]);
-  })
+  });
 
-  return (current/max).toFixed(2);
+  return (current / max).toFixed(2);
 };
 
 /**
@@ -113,13 +113,7 @@ export function extractRegexRecord(text: string): Record {
   const result: GradRecord[] = Object.values(resultGrade);
   if (result.length === 0) throw new ExtractError("Cadeiras do histórico");
 
-  const studentStatus = [...text.matchAll(regexStudentStatus)];
-  const status = {
-    mandatory: sliptProgress(studentStatus[0]),
-    optative: sliptProgress(studentStatus[1]),
-    complementary: sliptProgress(studentStatus[2]),
-  };
-
+  const status = extractStudentStatus(text);
   const [studentData] = [...text.matchAll(regexStudentData)];
 
   return {
@@ -131,6 +125,15 @@ export function extractRegexRecord(text: string): Record {
     classes: result,
   };
 }
+
+const extractStudentStatus = (text: string): Status => {
+  const studentStatus = [...text.matchAll(regexStudentStatus)];
+  return {
+    mandatory: sliptProgress(studentStatus[0]),
+    optative: sliptProgress(studentStatus[1]),
+    complementary: sliptProgress(studentStatus[2]),
+  };
+};
 
 const sliptProgress = (progressArray): string[] => {
   const progress = progressArray[1].trim();
