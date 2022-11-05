@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as mongoDB from "mongodb";
 import { CourseNotCreated } from "../util/errors";
 import { defaultSemester, Semester } from "./extract/classesOffered";

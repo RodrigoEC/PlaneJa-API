@@ -1,7 +1,7 @@
 import { regexPajamaContent, regexSemesterCourse } from "../../util/const";
 import { CourseNotFound, ExtractError } from "../../util/errors";
 import { capitalize, getMostRecentSubject } from "../../util/util";
-import { getClassesOffered, getSubjectsCourse, insertClassesOffered } from "../db";
+import { getSubjectsCourse, insertClassesOffered } from "../db";
 
 export interface Semester {
   name: string;
@@ -128,5 +128,5 @@ export const getUniqueSubjects = async (name: string) => {
     }
   })
 
-  return uniqueSubjects
+  return { semester: recentSubject.semester, classes:uniqueSubjects }
 };

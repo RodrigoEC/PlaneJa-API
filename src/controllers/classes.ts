@@ -53,9 +53,9 @@ export const excludeClassesOffered = async (req: Request, res: Response) => {
 
 export const retrieveUniqueClasses = async (req: Request, res: Response) => {
   try {
-    const { name, semester } = req.query;
+    const { name } = req.query;
 
-    const subjects = await getUniqueSubjects(capitalize(name as string), semester as string);
+    const subjects = await getUniqueSubjects(capitalize(name as string));
 
     res.status(200).send(subjects);
   } catch (e) {
