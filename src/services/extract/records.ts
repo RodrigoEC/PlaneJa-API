@@ -1,4 +1,5 @@
 import {
+  progressParameter,
   regexRecord,
   regexStudentData,
   regexStudentStatus,
@@ -113,8 +114,8 @@ export function extractRegexRecord(text: string): Record {
   const result: GradRecord[] = Object.values(resultGrade);
   if (result.length === 0) throw new ExtractError("Cadeiras do histórico");
 
-  const status = extractStudentStatus(text);
   const [studentData] = [...text.matchAll(regexStudentData)];
+  const status = extractStudentStatus(text, capitalize(studentData[3]));
 
   return {
     name: capitalize(studentData[2]),
@@ -126,21 +127,22 @@ export function extractRegexRecord(text: string): Record {
   };
 }
 
-const extractStudentStatus = (text: string): Status => {
+const extractStudentStatus = (text: string, course: string): Status => {
   const studentStatus = [...text.matchAll(regexStudentStatus)];
   return {
-    mandatory: sliptProgress(studentStatus[0]),
-    optative: sliptProgress(studentStatus[1]),
-    complementary: sliptProgress(studentStatus[2]),
+    mandatory: sliptProgress(studentStatus[0], "mandatory", course),
+    optative: sliptProgress(studentStatus[1], "optative", course),
+    complementary: sliptProgress(studentStatus[2], "complementary", course),
   };
 };
 
-const sliptProgress = (progressArray): string[] => {
+const sliptProgress = (
+  progressArray: string[],
+  type: string,
+  course: string
+): string[] => {
   const progress = progressArray[1].trim();
+  const maxProgress = progressParameter[course][type];
 
-  if (progress.length > 5) {
-    return [progress.slice(3,), progress.slice(0, 3)];
-  } else {
-    return [progress.slice(2,), progress.slice(0, 2)];
-  }
+  return [progress.split(maxProgress)[1], maxProgress];
 };
