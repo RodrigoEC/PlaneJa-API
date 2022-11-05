@@ -1,6 +1,6 @@
 import * as mongoDB from "mongodb";
 import { CourseNotCreated } from "../util/errors";
-import { Semester } from "./extract/classesOffered";
+import { defaultSemester, Semester } from "./extract/classesOffered";
 
 export const collections: { classesOffered?: mongoDB.Collection } = {};
 
@@ -25,11 +25,17 @@ export async function connectToDatabase() {
   );
 }
 
-export const getClassesOffered = async (name: string, semester: string) => {
+export const getClassesOffered = async (name: string, semester: string): Promise<Semester> => {
   const query = { name, semester };
-  return (await collections.classesOffered?.findOne(query)) ?? {};
+  const subject: any = await collections.classesOffered?.findOne(query)
+  return subject || defaultSemester;
 };
 
+export const getSubjectsCourse = async (course: string): Promise<Semester[]> => {
+  const query = { name: course };
+  const subject: any = await collections.classesOffered?.find(query).toArray()
+  return subject || defaultSemester;
+}
 export const deleteClassesOffered = async (name: string, semester: string) => {
   const query = { name, semester };
   return (await collections.classesOffered?.deleteOne(query)) ?? {};

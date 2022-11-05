@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { extractText } from ".";
-import { registerClassesOffered } from "../services/extract/classesOffered";
+import { registerClassesOffered, getUniqueSubjects } from "../services/extract/classesOffered";
 import { deleteClassesOffered, getClassesOffered } from "../services/db";
 import { capitalize } from "../util/util";
 
@@ -20,9 +20,9 @@ export const extractClassesOffered = async (req: Request, res: Response) => {
 
 export const retrieveClassesOffered = async (req: Request, res: Response) => {
   try {
-    const { name, semester }: { name: string; semester: string } = req.body;
+    const { name, semester } = req.query;
 
-    const classesOffered = await getClassesOffered(capitalize(name), semester);
+    const classesOffered = await getClassesOffered(capitalize(name as string), semester as string);
 
     res.status(201).send(classesOffered);
   } catch (e) {
@@ -49,3 +49,16 @@ export const excludeClassesOffered = async (req: Request, res: Response) => {
     res.status(e.statusCode ?? 500).send(e.message);
   }
 };
+
+
+export const retrieveUniqueClasses = async (req: Request, res: Response) => {
+  try {
+    const { name, semester } = req.query;
+
+    const subjects = await getUniqueSubjects(capitalize(name as string), semester as string);
+
+    res.status(200).send(subjects);
+  } catch (e) {
+    res.status(e.statusCode ?? 500).send(e.message);
+  }
+}

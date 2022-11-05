@@ -5,6 +5,7 @@ import { extractRecord } from "./controllers/record";
 import {
   excludeClassesOffered,
   retrieveClassesOffered,
+  retrieveUniqueClasses,
 } from "./controllers/classes";
 import { extractClassesOffered } from "./controllers/classes";
 
@@ -15,3 +16,4 @@ router.post("/records", upload.single("file"), extractRecord);
 router.post("/classes-offered", upload.single("file"), extractClassesOffered);
 router.get("/classes-offered", retrieveClassesOffered);
 router.delete("/classes-offered", excludeClassesOffered);
+router.get('/unique-subjects', retrieveUniqueClasses)

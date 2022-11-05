@@ -1,6 +1,10 @@
 import fs from "fs";
 import pdf from "pdf-parse";
-import { Schedule } from "../services/extract/classesOffered";
+import {
+  defaultSemester,
+  Schedule,
+  Semester,
+} from "../services/extract/classesOffered";
 
 /**
  * This function uses pdf-parse lib (https://www.npmjs.com/package/pdf-parse) to extract
@@ -33,4 +37,30 @@ export const capitalize = (string: string): string => {
   );
 
   return wordsCapitalized.join(" ");
+};
+
+export const getMostRecentSubject = (subjects: Semester[]) => {
+  if (subjects.length === 0) return defaultSemester;
+
+  let recentSubject = subjects[0];
+  const [mostRecentYearString, mostRecentSemesterString] =
+    subjects[0].semester.split(".");
+  let mostRecentYear = Number(mostRecentYearString);
+  let mostRecentSemester = Number(mostRecentSemesterString);
+
+  subjects.forEach((subject) => {
+    const [yearString, semesterString] = subject.semester.split(".");
+    const year = Number(yearString);
+    const semester = Number(semesterString);
+
+    if (year > mostRecentYear) {
+      mostRecentYear = year;
+      recentSubject = subject;
+    } else if (year === mostRecentYear && semester > mostRecentSemester) {
+      mostRecentSemester = semester;
+      recentSubject = subject;
+    }
+  });
+
+  return recentSubject;
 };

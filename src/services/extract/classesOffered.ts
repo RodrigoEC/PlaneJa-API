@@ -1,7 +1,7 @@
 import { regexPajamaContent, regexSemesterCourse } from "../../util/const";
-import { ExtractError } from "../../util/errors";
-import { capitalize } from "../../util/util";
-import { insertClassesOffered } from "../db";
+import { CourseNotFound, ExtractError } from "../../util/errors";
+import { capitalize, getMostRecentSubject } from "../../util/util";
+import { getClassesOffered, getSubjectsCourse, insertClassesOffered } from "../db";
 
 export interface Semester {
   name: string;
@@ -22,6 +22,12 @@ export interface Schedule {
   day: string;
   init_time: string;
   end_time: string;
+}
+
+export const defaultSemester: Semester = {
+  name: '',
+  semester: '',
+  classes: []
 }
 
 /**
@@ -106,4 +112,21 @@ const createScheduleList = (schedule: string[]): Schedule[] => {
   }
 
   return subjectSchedule;
+};
+
+export const getUniqueSubjects = async (name: string) => {
+  const allSubjects = await getSubjectsCourse(name);
+
+  const recentSubject = getMostRecentSubject(allSubjects)
+  
+  if (!recentSubject) throw new CourseNotFound(name, '')
+  const uniqueSubjects: string[] = []
+  
+  recentSubject?.classes.forEach((subject: Subject) => {
+    if (!uniqueSubjects.includes(subject.name)) {
+      uniqueSubjects.push(subject.name)
+    }
+  })
+
+  return uniqueSubjects
 };
