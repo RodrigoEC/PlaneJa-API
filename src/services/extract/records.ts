@@ -37,8 +37,8 @@ const calculateStudentProgress = (progresses: RegExpMatchArray[]): string => {
   let max = 0;
 
   progresses.forEach((progress) => {
-    current += Number(progress[1]);
-    max += Number(progress[0]);
+    current += Number(progress[0]);
+    max += Number(progress[1]);
   });
 
   return (current / max).toFixed(2);
