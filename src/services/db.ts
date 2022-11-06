@@ -11,7 +11,12 @@ export const collections: { classesOffered?: mongoDB.Collection } = {};
  */
 export async function connectToDatabase() {
   const client: mongoDB.MongoClient = new mongoDB.MongoClient(
-    process.env.DATABASE_URL as string
+    process.env.DATABASE_URL as string,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverApi: mongoDB.ServerApiVersion.v1,
+    }
   );
 
   await client.connect();
@@ -24,19 +29,26 @@ export async function connectToDatabase() {
   console.log(
     `Successfully connected to database: ${db.databaseName} and collection: ${gamesCollection.collectionName}`
   );
+
+  client.close();
 }
 
-export const getClassesOffered = async (name: string, semester: string): Promise<Semester> => {
+export const getClassesOffered = async (
+  name: string,
+  semester: string
+): Promise<Semester> => {
   const query = { name, semester };
-  const subject: any = await collections.classesOffered?.findOne(query)
+  const subject: any = await collections.classesOffered?.findOne(query);
   return subject || defaultSemester;
 };
 
-export const getSubjectsCourse = async (course: string): Promise<Semester[]> => {
+export const getSubjectsCourse = async (
+  course: string
+): Promise<Semester[]> => {
   const query = { name: course };
-  const subject: any = await collections.classesOffered?.find(query).toArray()
+  const subject: any = await collections.classesOffered?.find(query).toArray();
   return subject || defaultSemester;
-}
+};
 export const deleteClassesOffered = async (name: string, semester: string) => {
   const query = { name, semester };
   return (await collections.classesOffered?.deleteOne(query)) ?? {};
