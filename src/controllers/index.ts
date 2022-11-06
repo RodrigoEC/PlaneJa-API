@@ -24,7 +24,7 @@ export const extractText = async (
     const gradData = await processData(text);
 
     res.status(201).send(gradData);
-  } catch (e) {
+  } catch (e: any) {
     res.status(e.statusCode ?? 500).send(e.message);
   }
 };

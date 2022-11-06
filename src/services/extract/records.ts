@@ -56,7 +56,7 @@ export function extractRegexRecord(text: string): Record {
   text = text.replace(/(\r\n|\n|\r)/gm, " |");
 
   const regexData = [...text.matchAll(regexRecord)];
-  const resultGrade = {};
+  const resultGrade: any = {};
   regexData.forEach(
     ([
       ,

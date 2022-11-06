@@ -12,7 +12,7 @@ export const regexSemesterCourse = /\d{5} - (.*?) - D Período: (\d{4}.\d)/g;
 
 export const regexStudentData = /Aluno: (.*?) (.*?)CPF:.*Curso: (.*?) -/g;
 
-export const progressParameter = {
+export const progressParameter: any = {
   "Ciência Da Computação": {
     mandatory: 132,
     optative: 56,

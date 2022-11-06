@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { extractText } from ".";
 import { registerClassesOffered, getUniqueSubjects } from "../services/extract/classesOffered";
 import { deleteClassesOffered, getClassesOffered } from "../services/db";
 import { capitalize } from "../util/util";
+import { extractText } from "./index";
 
 const NOPARAMSERROR =
   "Paramêtros name (string) ou semester (string não foram enviados";
@@ -25,7 +25,7 @@ export const retrieveClassesOffered = async (req: Request, res: Response) => {
     const classesOffered = await getClassesOffered(capitalize(name as string), semester as string);
 
     res.status(201).send(classesOffered);
-  } catch (e) {
+  } catch (e: any) {
     res.status(e.statusCode ?? 500).send(e.message);
   }
 };
@@ -35,7 +35,7 @@ export const excludeClassesOffered = async (req: Request, res: Response) => {
     const { name, semester }: { name: string; semester: string } = req.body;
     if (!name || !semester) res.status(400).send(NOPARAMSERROR);
 
-    const status = await deleteClassesOffered(capitalize(name), semester);
+    const status: any = await deleteClassesOffered(capitalize(name), semester);
 
     if (status["deletedCount"] === 0)
       return res
@@ -45,7 +45,7 @@ export const excludeClassesOffered = async (req: Request, res: Response) => {
         );
 
     res.status(200).send(status);
-  } catch (e) {
+  } catch (e: any) {
     res.status(e.statusCode ?? 500).send(e.message);
   }
 };
@@ -58,7 +58,7 @@ export const retrieveUniqueClasses = async (req: Request, res: Response) => {
     const subjects = await getUniqueSubjects(capitalize(name as string));
 
     res.status(200).send(subjects);
-  } catch (e) {
+  } catch (e: any) {
     res.status(e.statusCode ?? 500).send(e.message);
   }
 }
