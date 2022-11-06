@@ -10,13 +10,15 @@ export const collections: { classesOffered?: mongoDB.Collection } = {};
  * database key "ClassesOffered".
  */
 export async function connectToDatabase() {
+  const options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverApi: mongoDB.ServerApiVersion.v1,
+  };
+
   const client: mongoDB.MongoClient = new mongoDB.MongoClient(
     process.env.DATABASE_URL as string,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverApi: mongoDB.ServerApiVersion.v1,
-    }
+    options
   );
 
   await client.connect();
