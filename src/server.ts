@@ -19,6 +19,7 @@ const logger = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const app = express();
+app.use(express.static('public'))
 app.use(logger);
 app.use(helmet());
 app.use(cors());
