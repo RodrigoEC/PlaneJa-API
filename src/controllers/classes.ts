@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { registerClassesOffered, getUniqueSubjects } from "../services/extract/classesOffered";
+import {
+  registerClassesOffered,
+  getUniqueSubjects,
+} from "../services/extract/classesOffered";
 import { deleteClassesOffered, getClassesOffered } from "../services/db";
 import { capitalize } from "../util/util";
 import { extractText } from "./index";
@@ -8,7 +11,7 @@ const NOPARAMSERROR =
   "Paramêtros name (string) ou semester (string não foram enviados";
 
 /**
- * This function extracts the text from a classes offered file that is send
+ * This function extracts the text from a classes offered file that is sent
  * as part of the request object.
  *
  * @param req request object containing the request parameters
@@ -18,11 +21,29 @@ export const extractClassesOffered = async (req: Request, res: Response) => {
   extractText(req, res, registerClassesOffered);
 };
 
+/**
+ * This function is the controller function that returns a response object with
+ * an object of the type Semester (src/services/classesOffered.ts). If nothing is found with
+ * the parameters that are given this object is returned:
+ * {
+ *  "name": "",
+ *  "semester": "",
+ *  "classes": []
+ * }
+ * 
+ * @param req Request object that contains the following parameters:
+    * @param name: Course's name;
+    * @param semester: A specific classes offered semester
+ * @param res Response object
+ */
 export const retrieveClassesOffered = async (req: Request, res: Response) => {
   try {
     const { name, semester } = req.query;
 
-    const classesOffered = await getClassesOffered(capitalize(name as string), semester as string);
+    const classesOffered = await getClassesOffered(
+      capitalize(name as string),
+      semester as string
+    );
 
     res.status(201).send(classesOffered);
   } catch (e: any) {
@@ -50,7 +71,6 @@ export const excludeClassesOffered = async (req: Request, res: Response) => {
   }
 };
 
-
 export const retrieveUniqueClasses = async (req: Request, res: Response) => {
   try {
     const { name } = req.query;
@@ -61,4 +81,4 @@ export const retrieveUniqueClasses = async (req: Request, res: Response) => {
   } catch (e: any) {
     res.status(e.statusCode ?? 500).send(e.message);
   }
-}
+};
