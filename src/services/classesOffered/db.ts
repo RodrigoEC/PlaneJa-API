@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as mongoDB from "mongodb";
 import { CourseNotCreated } from "../../util/errors";
-import { defaultSemester, Semester } from "../../util/interfaces"
+import { defaultSemester, Semester } from "../../util/interfaces";
 
 export const collections: { classesOffered?: mongoDB.Collection } = {};
 
@@ -26,6 +26,14 @@ export async function connectToDatabase() {
   );
 }
 
+/**
+ * Function that access the database and returns the classes offered from a specific course
+ * and semester.
+ * 
+ * @param name(string) Course name
+ * @param semester(string) Course semester related to the classes offered 
+ * @returns A Semester object if exists or the defaultSemester object.
+ */
 export const getClassesOffered = async (
   name: string,
   semester: string
@@ -35,26 +43,47 @@ export const getClassesOffered = async (
   return subject || defaultSemester;
 };
 
-export const getSubjectsCourse = async (
+/**
+ * Function that access the database and returns a list of Semesters objects that represents
+ * a list of classes offered.
+ *  
+ * @param course (string) course name
+ * @returns A list of Semesters objects
+ */
+export const getAllClassesOffered = async (
   course: string
 ): Promise<Semester[]> => {
   const query = { name: course };
   const subject: any = await collections.classesOffered?.find(query).toArray();
-  return subject || defaultSemester;
+
+  return subject || [defaultSemester];
 };
+
+/**
+ * Delete the course data from a specific course name and semester
+ * 
+ * @param name (string) Course name
+ * @param semester (string) Course semester related to the classes offered 
+ */
 export const deleteClassesOffered = async (name: string, semester: string) => {
   const query = { name, semester };
   return (await collections.classesOffered?.deleteOne(query)) ?? {};
 };
 
+/**
+ * Insert a new Semester object to the database
+ * 
+ * @param classesOffered (Semester) new Semester object
+ */
 export const insertClassesOffered = async (classesOffered: Semester) => {
-  const { name, semester }: { name: string; semester: string } = classesOffered;
+  const { name, semester } = classesOffered;
   const query = { name, semester };
-  const options = { upsert: true };
+
   const result = await collections.classesOffered?.replaceOne(
     query,
     classesOffered,
-    options
+    { upsert: true }
   );
-  if (!result) throw new CourseNotCreated(classesOffered.name);
+
+  if (!result) throw new CourseNotCreated(name);
 };

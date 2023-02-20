@@ -65,7 +65,7 @@ export const excludeClassesOffered = async (req: Request, res: Response) => {
     const { name, semester }: { name: string; semester: string } = req.body;
     if (!name || !semester) res.status(400).send(NOPARAMSERROR);
 
-    const status: any = await deleteClassesOffered(capitalize(name), semester);
+    const status: any = await deleteClassesOffered(name.toLocaleLowerCase(), semester);
 
     if (status["deletedCount"] === 0)
       return res
@@ -80,11 +80,16 @@ export const excludeClassesOffered = async (req: Request, res: Response) => {
   }
 };
 
-export const retrieveUniqueClasses = async (req: Request, res: Response) => {
+/**
+ * Request controller that returns an object with a list of unique subjects
+ * @param req Request object
+ * @param res Response object
+ */
+export const retrieveUniqueSubject = async (req: Request, res: Response) => {
   try {
     const { name } = req.query;
 
-    const subjects = await extractUniqueSubjects(capitalize(name as string));
+    const subjects = await extractUniqueSubjects((name as string).toLocaleLowerCase());
 
     res.status(200).send(subjects);
   } catch (e: any) {

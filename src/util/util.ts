@@ -1,10 +1,7 @@
 import fs from "fs";
 import pdf from "pdf-parse";
-import {
-  defaultSemester,
-  Schedule,
-  Semester,
-} from "../services/classesOffered/extract";
+import { defaultSemester, Semester, SubjectSchedule } from "./interfaces";
+
 
 /**
  * This function uses pdf-parse lib (https://www.npmjs.com/package/pdf-parse) to extract
@@ -20,8 +17,8 @@ export async function extractPDFText(pdfPath: string): Promise<string> {
 }
 
 export const compareSubject = (
-  schedule1: Schedule,
-  schedule2: Schedule
+  schedule1: SubjectSchedule,
+  schedule2: SubjectSchedule
 ): boolean => {
   return (
     schedule1.day === schedule2.day &&
@@ -39,10 +36,17 @@ export const capitalize = (string: string): string => {
   return wordsCapitalized.join(" ");
 };
 
-export const getMostRecentSubject = (subjects: Semester[]) => {
+/**
+ * Function that returns the most recent subject in a list of subject
+ * based on the year and year semester from the subjects.
+ *  
+ * @param subjects (Semester[])
+ * @returns Semester object type
+ */
+export const getMostRecentSubject = (subjects: Semester[]): Semester => {
   if (subjects.length === 0) return defaultSemester;
 
-  let recentSubject = subjects[0];
+  let recentSubject = subjects[0] || defaultSemester;
   const [mostRecentYearString, mostRecentSemesterString] =
     subjects[0].semester.split(".");
   let mostRecentYear = Number(mostRecentYearString);

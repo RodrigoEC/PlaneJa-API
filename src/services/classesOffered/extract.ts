@@ -1,8 +1,8 @@
 import { regexClassesOffered, regexHeadCourseData } from "../../util/const";
 import { CourseNotFound, ExtractError } from "../../util/errors";
-import { SubjectSchedule, Semester, Subject } from "../../util/interfaces";
+import { SubjectSchedule, Semester, Subject, defaultSemester } from "../../util/interfaces";
 import { getMostRecentSubject } from "../../util/util";
-import { getSubjectsCourse, insertClassesOffered } from "./db";
+import { getAllClassesOffered, insertClassesOffered } from "./db";
 
 /**
  * Function that formats a list of schedule informations into a list of schedules of
@@ -81,19 +81,26 @@ export async function extractClassesOffered(text: string): Promise<Semester> {
   return semester;
 }
 
-export const extractUniqueSubjects = async (name: string) => {
-  const allSubjects = await getSubjectsCourse(name);
+/**
+ * Function that extracts a list of subjects 
+ * @param name (string) course name
+ * @returns 
+ */
+export const extractUniqueSubjects = async (name: string): Promise<any> => {
+  const allSubjects = await getAllClassesOffered(name);
+  
+  const recentSubject: Semester = getMostRecentSubject(allSubjects);
+  if (recentSubject === defaultSemester) throw new CourseNotFound(name, "");
 
-  const recentSubject = getMostRecentSubject(allSubjects);
+  const {semester, subjects} = recentSubject
 
-  if (!recentSubject) throw new CourseNotFound(name, "");
   const uniqueSubjects: string[] = [];
-
-  recentSubject?.classes.forEach((subject: Subject) => {
-    if (!uniqueSubjects.includes(subject.name)) {
-      uniqueSubjects.push(subject.name);
+  subjects.forEach((subject: Subject) => {
+    const subjectName = `${subject.name} - T${subject.class_num}`
+    if (!uniqueSubjects.includes(subjectName)) {
+      uniqueSubjects.push(subjectName);
     }
   });
 
-  return { semester: recentSubject.semester, classes: uniqueSubjects };
+  return { name, semester, subjects: uniqueSubjects };
 };
