@@ -2,7 +2,6 @@ import fs from "fs";
 import pdf from "pdf-parse";
 import { defaultSemester, Semester, SubjectSchedule } from "./interfaces";
 
-
 /**
  * This function uses pdf-parse lib (https://www.npmjs.com/package/pdf-parse) to extract
  * text from a pdf path that's passed as parameter to the function
@@ -39,7 +38,7 @@ export const capitalize = (string: string): string => {
 /**
  * Function that returns the most recent subject in a list of subject
  * based on the year and year semester from the subjects.
- *  
+ *
  * @param subjects (Semester[])
  * @returns Semester object type
  */
@@ -74,8 +73,15 @@ export const calculateProgress = (
 ): [currentAmount: string, max: string] => {
   let i = 1;
   while (i < progress.length) {
-    const max = progress.slice(0, i);
-    const current = progress.slice(i).trim();
+    let max;
+    let current;
+    if (i <= progress.length - 2 && progress.slice(i, i + 2) == "00") {
+      max = progress.slice(0, i + 1);
+      current = progress.slice(i + 1).trim();
+    } else {
+      max = progress.slice(0, i);
+      current = progress.slice(i).trim();
+    }
     if (Number(max) >= Number(current)) return [current, max];
 
     i += 1;

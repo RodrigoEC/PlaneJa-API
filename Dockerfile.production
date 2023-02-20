@@ -16,6 +16,6 @@ RUN chown -R $user:$user /app
 
 USER $user
 
-CMD npm run dev
+CMD npm start
 
 EXPOSE 8080

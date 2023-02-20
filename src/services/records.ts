@@ -26,7 +26,7 @@ const calculateStudentProgress = (progresses: RegExpMatchArray[]): string => {
  * @param text Text that's going to have data extracted.
  * @returns A list of the type GradRecord with the info that was retrieved.
  */
-export function extractRegexRecord(text: string): Record {
+export function extractRegexRecord(text: string): any {
   text = text.replace(/(\r\n|\n|\r)/gm, " |");
 
   const regexData = [...text.matchAll(regexRecord)];
