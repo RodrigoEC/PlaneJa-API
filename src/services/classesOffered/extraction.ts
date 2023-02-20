@@ -1,17 +1,24 @@
 import { regexClassesOffered, regexHeadCourseData } from "../../util/const";
 import { CourseNotFound, ExtractError } from "../../util/errors";
-import { SubjectSchedule, Semester, Subject, defaultSemester } from "../../util/interfaces";
+import {
+  SubjectSchedule,
+  Semester,
+  Subject,
+  defaultSemester,
+} from "../../util/interfaces";
 import { getMostRecentSubject } from "../../util/util";
 import { getAllClassesOffered, insertClassesOffered } from "./db";
 
 /**
  * Function that formats a list of schedule informations into a list of schedules of
  * the type SubjectSchedule (src/util/interfaces.ts)
- * 
+ *
  * @param rawScheduleItems schedule items that are going to be formated
  * @returns SubjectSchedule[]
  */
-const formatSubjectSchedule = (rawScheduleItems: string[]): SubjectSchedule[] => {
+const formatSubjectSchedule = (
+  rawScheduleItems: string[]
+): SubjectSchedule[] => {
   const subjectSchedules: SubjectSchedule[] = [];
 
   const pace = 3;
@@ -33,7 +40,8 @@ const formatSubjectSchedule = (rawScheduleItems: string[]): SubjectSchedule[] =>
  */
 const formatSubjectsList = (rawSubjectsList: RegExpMatchArray[]): Subject[] => {
   const formatedSubjects = rawSubjectsList.map((subjectData) => {
-    const [, id, name, class_num, credits, workload, ...scheduleItems] = subjectData;
+    const [, id, name, class_num, credits, workload, ...scheduleItems] =
+      subjectData;
     const schedule = formatSubjectSchedule(scheduleItems);
 
     return {
@@ -82,21 +90,21 @@ export async function extractClassesOffered(text: string): Promise<Semester> {
 }
 
 /**
- * Function that extracts a list of subjects 
+ * Function that extracts a list of subjects
  * @param name (string) course name
- * @returns 
+ * @returns
  */
 export const extractUniqueSubjects = async (name: string): Promise<any> => {
   const allSubjects = await getAllClassesOffered(name);
-  
+
   const recentSubject: Semester = getMostRecentSubject(allSubjects);
   if (recentSubject === defaultSemester) throw new CourseNotFound(name, "");
 
-  const {semester, subjects} = recentSubject
+  const { semester, subjects } = recentSubject;
 
   const uniqueSubjects: string[] = [];
   subjects.forEach((subject: Subject) => {
-    const subjectName = `${subject.name} - T${subject.class_num}`
+    const subjectName = `${subject.name} - T${subject.class_num}`;
     if (!uniqueSubjects.includes(subjectName)) {
       uniqueSubjects.push(subjectName);
     }

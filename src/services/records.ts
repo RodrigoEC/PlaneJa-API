@@ -1,37 +1,11 @@
 import {
-  progressParameter,
   regexRecord,
   regexStudentData,
   regexStudentStatus,
 } from "../util/const";
 import { ExtractError } from "../util/errors";
-import { capitalize } from "../util/util";
-
-export interface Status {
-  mandatory: string[];
-  optative: string[];
-  complementary: string[];
-}
-
-export interface Record {
-  name: string;
-  enrollment_number: string;
-  course: string;
-  status: Status;
-  progress: string;
-  classes: GradRecord[];
-}
-
-export interface GradRecord {
-  id: number;
-  name: string;
-  type: string;
-  credits: number;
-  workload: number;
-  grade: number;
-  status: string;
-  semester: string;
-}
+import { Record, StudentStatus, StudentSubject } from "../util/interfaces";
+import { calculateProgress, capitalize } from "../util/util";
 
 const calculateStudentProgress = (progresses: RegExpMatchArray[]): string => {
   let current = 0;
@@ -81,7 +55,7 @@ export function extractRegexRecord(text: string): Record {
     ]) => {
       const professorsList = professors ? professors.split(" |") : [];
       const subjectData = {
-        id: +id,
+        id: id,
         name: name.substring(0, name.length).trim(),
         professors: professorsList,
         type,
@@ -100,7 +74,7 @@ export function extractRegexRecord(text: string): Record {
         semester,
       };
 
-      const subjectName = subjectData.name;
+      const { name: subjectName } = subjectData;
       if (
         (subjectName in Object.values(resultGrade) &&
           resultGrade[subjectName].status !== "Aprovado") ||
@@ -111,38 +85,29 @@ export function extractRegexRecord(text: string): Record {
     }
   );
 
-  const result: GradRecord[] = Object.values(resultGrade);
+  const result: StudentSubject[] = Object.values(resultGrade);
   if (result.length === 0) throw new ExtractError("Cadeiras do histórico");
 
   const [studentData] = [...text.matchAll(regexStudentData)];
-  const status = extractStudentStatus(text, capitalize(studentData[3]));
+  const status = extractStudentStatus(text);
 
   return {
-    name: capitalize(studentData[2]),
+    name: studentData[2].toLocaleLowerCase(),
     enrollment_number: studentData[1],
-    course: capitalize(studentData[3]),
+    course: studentData[3].toLocaleLowerCase(),
     progress: calculateStudentProgress(Object.values(status)),
     status,
     classes: result,
   };
 }
 
-const extractStudentStatus = (text: string, course: string): Status => {
+const extractStudentStatus = (text: string): StudentStatus => {
   const studentStatus = [...text.matchAll(regexStudentStatus)];
   return {
-    mandatory: sliptProgress(studentStatus[0], "mandatory", course),
-    optative: sliptProgress(studentStatus[1], "optative", course),
-    complementary: sliptProgress(studentStatus[2], "complementary", course),
+    mandatory: calculateProgress(studentStatus[0][1]),
+    optative: calculateProgress(studentStatus[1][1]),
+    complementary: calculateProgress(studentStatus[2][1]),
   };
 };
 
-const sliptProgress = (
-  progressArray: string[],
-  type: string,
-  course: string
-): string[] => {
-  const progress = progressArray[1].trim();
-  const maxProgress = progressParameter[course][type];
 
-  return [progress.split(maxProgress)[1], maxProgress];
-};

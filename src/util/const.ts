@@ -8,14 +8,6 @@ export const regexClassesOffered =
   /(?:(?:Professores:|\d{1,2}) (?:[0-9]{7}) - (?:(?![0-9]{7}).*?))? ([0-9]{7}) - ((?![0-9]{7}).*?)(\d{2}) (\d{1,2}) (\d{2,3}) (?:(\d) (\d{2}:\d{2})-(\d{2}:\d{2}) \(.*?\))?(?:(\d) (\d{2}:\d{2})-(\d{2}:\d{2}) \(.*?\))?(?:(\d) (\d{2}:\d{2})-(\d{2}:\d{2}) \(.*?\))?(?:(\d) (\d{2}:\d{2})-(\d{2}:\d{2}) \(.*?\))?/g;
 
 export const regexStudentStatus =
-  /(?:Obrigatórias|Optativas|Atividades complementares)(?:.*?\(.*?\))(.*?)\(.*?\)/g;
+  /.(?:Obrigatórias|Optativas|Atividades complementares)(?:.*?\(.*?\))(.*?)\((.*?)%\)/g;
 
 export const regexStudentData = /Aluno: (.*?) (.*?)CPF:.*Curso: (.*?) -/g;
-
-export const progressParameter: any = {
-  "Ciência Da Computação": {
-    mandatory: 132,
-    optative: 56,
-    complementary: 30,
-  },
-};

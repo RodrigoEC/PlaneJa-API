@@ -68,3 +68,18 @@ export const getMostRecentSubject = (subjects: Semester[]): Semester => {
 
   return recentSubject;
 };
+
+export const calculateProgress = (
+  progress: string
+): [currentAmount: string, max: string] => {
+  let i = 1;
+  while (i < progress.length) {
+    const max = progress.slice(0, i);
+    const current = progress.slice(i).trim();
+    if (Number(max) >= Number(current)) return [current, max];
+
+    i += 1;
+  }
+
+  return ["", ""];
+};

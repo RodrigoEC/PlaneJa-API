@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { Record } from "../services/records";
-import { Semester } from "../util/interfaces";
+import { Record, Semester } from "../util/interfaces";
 import { extractPDFText } from "../util/util";
 
 /**

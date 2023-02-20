@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   extractClassesOffered as extractClasses,
   extractUniqueSubjects,
-} from "../services/classesOffered/extract";
+} from "../services/classesOffered/extraction";
 import { deleteClassesOffered, getClassesOffered } from "../services/classesOffered/db";
 import { capitalize } from "../util/util";
 import { extractText } from "./index";
