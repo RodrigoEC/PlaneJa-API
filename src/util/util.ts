@@ -4,7 +4,7 @@ import {
   defaultSemester,
   Schedule,
   Semester,
-} from "../services/extract/classesOffered";
+} from "../services/classesOffered/extract";
 
 /**
  * This function uses pdf-parse lib (https://www.npmjs.com/package/pdf-parse) to extract

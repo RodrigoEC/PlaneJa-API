@@ -3,9 +3,9 @@ import {
   regexRecord,
   regexStudentData,
   regexStudentStatus,
-} from "../../util/const";
-import { ExtractError } from "../../util/errors";
-import { capitalize } from "../../util/util";
+} from "../util/const";
+import { ExtractError } from "../util/errors";
+import { capitalize } from "../util/util";
 
 export interface Status {
   mandatory: string[];

@@ -3,11 +3,11 @@ import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { router } from "./routes";
-import { connectToDatabase } from "./services/db";
+import { connectToDatabase } from "./services/classesOffered/db";
 
 dotenv.config();
 
-const PORT: number = parseInt(process.env.PORT as string, 10) || 7000;
+const PORT: number = parseInt(process.env.PORT as string, 10) || 8080;
 
 const logger = (req: Request, res: Response, next: NextFunction) => {
   res.on("finish", () =>

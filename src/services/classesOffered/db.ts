@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as mongoDB from "mongodb";
-import { CourseNotCreated } from "../util/errors";
-import { defaultSemester, Semester } from "./extract/classesOffered";
+import { CourseNotCreated } from "../../util/errors";
+import { defaultSemester, Semester } from "../../util/interfaces"
 
 export const collections: { classesOffered?: mongoDB.Collection } = {};
 
@@ -18,11 +18,11 @@ export async function connectToDatabase() {
 
   const db: mongoDB.Db = client.db(process.env.DB_NAME);
 
-  const gamesCollection: mongoDB.Collection = db.collection("planeja");
+  const planeja: mongoDB.Collection = db.collection("planeja");
 
-  collections.classesOffered = gamesCollection;
+  collections.classesOffered = planeja;
   console.log(
-    `Successfully connected to database: ${db.databaseName} and collection: ${gamesCollection.collectionName}`
+    `Successfully connected to database: ${db.databaseName} and collection: ${planeja.collectionName}`
   );
 }
 

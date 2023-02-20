@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import {
-  registerClassesOffered,
-  getUniqueSubjects,
-} from "../services/extract/classesOffered";
-import { deleteClassesOffered, getClassesOffered } from "../services/db";
+  extractClassesOffered as extractClasses,
+  extractUniqueSubjects,
+} from "../services/classesOffered/extract";
+import { deleteClassesOffered, getClassesOffered } from "../services/classesOffered/db";
 import { capitalize } from "../util/util";
 import { extractText } from "./index";
 
@@ -18,13 +18,14 @@ const NOPARAMSERROR =
  * @param res Response object
  */
 export const extractClassesOffered = async (req: Request, res: Response) => {
-  extractText(req, res, registerClassesOffered);
+  extractText(req, res, extractClasses);
 };
 
 /**
  * This function is the controller function that returns a response object with
- * an object of the type Semester (src/services/classesOffered.ts). If nothing is found with
- * the parameters that are given this object is returned:
+ * an object of the type Semester (src/services/classesOffered.ts) stored on the project's database. 
+ * If nothing is found with the parameters that are given this object is returned:
+ * 
  * {
  *  "name": "",
  *  "semester": "",
@@ -51,6 +52,14 @@ export const retrieveClassesOffered = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * This function is the controller function that deletes a specific classes offered data from the database.
+ * For that the user has to send the course name and semester as part of the request body.
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
 export const excludeClassesOffered = async (req: Request, res: Response) => {
   try {
     const { name, semester }: { name: string; semester: string } = req.body;
@@ -75,7 +84,7 @@ export const retrieveUniqueClasses = async (req: Request, res: Response) => {
   try {
     const { name } = req.query;
 
-    const subjects = await getUniqueSubjects(capitalize(name as string));
+    const subjects = await extractUniqueSubjects(capitalize(name as string));
 
     res.status(200).send(subjects);
   } catch (e: any) {
