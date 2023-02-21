@@ -6,6 +6,7 @@ import {
 import { ExtractError } from "../util/errors";
 import { Record, StudentStatus, StudentSubject } from "../util/interfaces";
 import { calculateProgress } from "../util/util";
+import { recommendSubjects } from "./recommend";
 
 const calculateStudentProgress = (progresses: RegExpMatchArray[]): string => {
   let current = 0;
@@ -26,7 +27,11 @@ const calculateStudentProgress = (progresses: RegExpMatchArray[]): string => {
  * @param text Text that's going to have data extracted.
  * @returns A list of the type GradRecord with the info that was retrieved.
  */
-export function extractRegexRecord(text: string): Record {
+export async function extractRegexRecord(
+  text: string,
+  requiredItems: string[],
+  recommendEnrollment: boolean
+): Promise<Record> {
   text = text.replace(/(\r\n|\n|\r)/gm, " |");
 
   const regexData = [...text.matchAll(regexRecord)];
@@ -91,14 +96,28 @@ export function extractRegexRecord(text: string): Record {
   const [studentData] = [...text.matchAll(regexStudentData)];
   const status = extractStudentStatus(text);
 
-  return {
+  const studentRecord: Record = {
     name: studentData[2].toLocaleLowerCase(),
     enrollment_number: studentData[1],
     course: studentData[3].toLocaleLowerCase(),
     progress: calculateStudentProgress(Object.values(status)),
-    status,
+    status: status,
     subjects: result,
   };
+
+  if (requiredItems.length > 0) {
+    Object.keys(studentRecord).forEach((key: string) => {
+      if (!requiredItems.includes(key)) {
+        delete studentRecord[key as keyof Record];
+      }
+    });
+  }
+
+  if (recommendEnrollment) {
+    const enrollments = await recommendSubjects(result, []);
+    studentRecord.recommended_enrollments = enrollments;
+  }
+  return studentRecord as Record;
 }
 
 const extractStudentStatus = (text: string): StudentStatus => {
@@ -109,5 +128,3 @@ const extractStudentStatus = (text: string): StudentStatus => {
     complementary: calculateProgress(studentStatus[2][1]),
   };
 };
-
-

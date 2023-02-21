@@ -1,7 +1,7 @@
-import { Subject, WeekSchedule } from "../util/interfaces";
+import { StudentSubject, WeekSchedule } from "../util/interfaces";
 
 export const recommendSubjects = async (
-  studentSubjects: Subject[],
+  studentSubjects: StudentSubject[],
   requiredSubjects: string[]
 ): Promise<WeekSchedule[]> => {
   const subjects: WeekSchedule[] = [

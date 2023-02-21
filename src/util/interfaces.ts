@@ -45,12 +45,13 @@ export interface StudentSubject {
 }
 
 export interface Record {
-  name: string;
-  enrollment_number: string;
-  course: string;
-  status: StudentStatus;
-  progress: string;
-  subjects: StudentSubject[];
+  name?: string;
+  enrollment_number?: string;
+  course?: string;
+  status?: StudentStatus;
+  progress?: string;
+  subjects?: StudentSubject[];
+  recommended_enrollments?: WeekSchedule[]
 }
 
 // Recommendation 
