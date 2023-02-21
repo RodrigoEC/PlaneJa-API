@@ -50,5 +50,5 @@ export interface Record {
   course: string;
   status: StudentStatus;
   progress: string;
-  classes: StudentSubject[];
+  subjects: StudentSubject[];
 }

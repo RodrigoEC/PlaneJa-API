@@ -5,12 +5,14 @@ WORKDIR /app
 ENV PORT=8080
 
 ENV DATABASE_URL=
-
 COPY package*.json ./
 
 RUN npm i
 
+
 COPY . . 
+
+RUN npm run build
 
 RUN chown -R $user:$user /app
 

@@ -42,7 +42,7 @@ export const retrieveClassesOffered = async (req: Request, res: Response) => {
     const { name, semester } = req.query;
 
     const classesOffered = await getClassesOffered(
-      capitalize(name as string),
+      (name as string).toLocaleLowerCase(),
       semester as string
     );
 

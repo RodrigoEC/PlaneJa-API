@@ -5,7 +5,7 @@ import {
 } from "../util/const";
 import { ExtractError } from "../util/errors";
 import { Record, StudentStatus, StudentSubject } from "../util/interfaces";
-import { calculateProgress, capitalize } from "../util/util";
+import { calculateProgress } from "../util/util";
 
 const calculateStudentProgress = (progresses: RegExpMatchArray[]): string => {
   let current = 0;
@@ -26,7 +26,7 @@ const calculateStudentProgress = (progresses: RegExpMatchArray[]): string => {
  * @param text Text that's going to have data extracted.
  * @returns A list of the type GradRecord with the info that was retrieved.
  */
-export function extractRegexRecord(text: string): any {
+export function extractRegexRecord(text: string): Record {
   text = text.replace(/(\r\n|\n|\r)/gm, " |");
 
   const regexData = [...text.matchAll(regexRecord)];
@@ -97,7 +97,7 @@ export function extractRegexRecord(text: string): any {
     course: studentData[3].toLocaleLowerCase(),
     progress: calculateStudentProgress(Object.values(status)),
     status,
-    classes: result,
+    subjects: result,
   };
 }
 
