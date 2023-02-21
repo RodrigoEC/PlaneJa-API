@@ -8,6 +8,7 @@ import {
   retrieveUniqueSubject,
 } from "./controllers/classes";
 import { extractClassesOffered } from "./controllers/classes";
+import { recommendEnrollment } from "./controllers/recommend";
 
 export const router = express.Router();
 const upload = multer({ dest: os.tmpdir() });
@@ -17,6 +18,7 @@ router.post("/classes-offered", upload.single("file"), extractClassesOffered);
 router.get("/classes-offered", retrieveClassesOffered);
 router.delete("/classes-offered", excludeClassesOffered);
 router.get("/unique-subjects", retrieveUniqueSubject);
+router.post("/recommend", recommendEnrollment);
 router.get("/", (req: Request, res: Response) => {
   res.send("Code with Rico. Ready to run on Heroku.");
 });
