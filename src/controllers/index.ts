@@ -17,13 +17,14 @@ export const extractText = async (
 ) => {
   try {
     const file = req["file"];
-    if (!file) return res.status(404).send("Missing file (File) parameter");
+    if (!file)
+      return res.status(404).send({ error: "Missing file (File) parameter" });
 
     const text = await extractPDFText(file.path);
     const gradData = await processData(text);
 
     res.status(201).send(gradData);
   } catch (e: any) {
-    res.status(e.statusCode ?? 500).send(e.message);
+    res.status(e.statusCode ?? 500).send({ error: e.message });
   }
 };

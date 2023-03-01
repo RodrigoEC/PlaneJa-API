@@ -13,7 +13,7 @@ export const extractRecord = async (req: Request, res: Response) => {
     let requiredItems: string[] = [];
     if (include) {
       const includedItems = (include as string).split(",");
-      requiredItems = includedItems.map(item => item.trim());
+      requiredItems = includedItems.map((item) => item.trim());
     }
 
     let recommendSubjects = false;
@@ -21,10 +21,14 @@ export const extractRecord = async (req: Request, res: Response) => {
       recommendSubjects = true;
     }
 
-    const gradData = await extractRegexRecord(text, requiredItems, recommendSubjects);
+    const gradData = await extractRegexRecord(
+      text,
+      requiredItems,
+      recommendSubjects
+    );
 
     res.status(201).send(gradData);
   } catch (e: any) {
-    res.status(e.statusCode ?? 500).send(e.message);
+    res.status(e.statusCode ?? 500).send({ error: e.message });
   }
 };
