@@ -2,6 +2,7 @@
 export interface Semester {
   name: string;
   semester: string;
+  subjects_entries: number;
   subjects: Subject[];
 }
 
@@ -23,6 +24,7 @@ export interface SubjectSchedule {
 export const defaultSemester: Semester = {
   name: "",
   semester: "",
+  subjects_entries: 0,
   subjects: [],
 };
 

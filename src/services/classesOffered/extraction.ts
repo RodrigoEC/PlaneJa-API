@@ -68,20 +68,21 @@ const formatSubjectsList = (rawSubjectsList: RegExpMatchArray[]): Subject[] => {
  * @returns A list of the type Subject with the info that was retrieved.
  */
 export async function extractClassesOffered(text: string): Promise<Semester> {
-  text = text.replace(/(\r\n|\n|\r)/gm, " ");
-
+  text = text.replace(/(\r\n|\n|\r)/gm, "\\n");
   const rawSubjectsList = [...text.matchAll(regexClassesOffered)];
 
   const subjects = formatSubjectsList(rawSubjectsList);
+
   if (!subjects)
     throw new ExtractError("Disciplinas do arquivo de turmas ofertadas");
 
   const [semesterHeadData] = [...text.matchAll(regexHeadCourseData)];
   if (!semesterHeadData) throw new ExtractError("Nome do curso e semestre");
 
-  const semester: Semester = {
+  const semester = {
     name: semesterHeadData[1].toLocaleLowerCase(),
     semester: semesterHeadData[2],
+    subjects_entries: subjects.length,
     subjects,
   };
 
