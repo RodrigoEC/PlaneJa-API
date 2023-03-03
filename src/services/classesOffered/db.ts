@@ -29,24 +29,31 @@ export async function connectToDatabase() {
 /**
  * Function that access the database and returns the classes offered from a specific course
  * and semester.
- * 
+ *
  * @param name(string) Course name
- * @param semester(string) Course semester related to the classes offered 
+ * @param semester(string) Course semester related to the classes offered
  * @returns A Semester object if exists or the defaultSemester object.
  */
 export const getClassesOffered = async (
   name: string,
-  semester: string
+  semester?: string
 ): Promise<Semester> => {
   const query = { name, semester };
-  const subject: any = await collections.classesOffered?.findOne(query);
-  return subject || defaultSemester;
+  let subject: any = await collections.classesOffered?.findOne(query);
+
+  if (!subject) {
+    subject = defaultSemester;
+  }
+  delete subject.name;
+  delete subject.semester;
+
+  return subject;
 };
 
 /**
  * Function that access the database and returns a list of Semesters objects that represents
  * a list of classes offered.
- *  
+ *
  * @param course (string) course name
  * @returns A list of Semesters objects
  */
@@ -61,9 +68,9 @@ export const getAllClassesOffered = async (
 
 /**
  * Delete the course data from a specific course name and semester
- * 
+ *
  * @param name (string) Course name
- * @param semester (string) Course semester related to the classes offered 
+ * @param semester (string) Course semester related to the classes offered
  */
 export const deleteClassesOffered = async (name: string, semester: string) => {
   const query = { name, semester };
@@ -72,7 +79,7 @@ export const deleteClassesOffered = async (name: string, semester: string) => {
 
 /**
  * Insert a new Semester object to the database
- * 
+ *
  * @param classesOffered (Semester) new Semester object
  */
 export const insertClassesOffered = async (classesOffered: Semester) => {

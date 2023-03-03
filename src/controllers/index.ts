@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { sendError } from "../util/errors";
 import { Record, Semester } from "../util/interfaces";
 import { extractPDFText } from "../util/util";
 
@@ -18,13 +19,16 @@ export const extractText = async (
   try {
     const file = req["file"];
     if (!file)
-      return res.status(404).send({ error: "Missing file (File) parameter" });
+      return sendError(res, {
+        status: 400,
+        error: "Missing file (File) parameter",
+      });
 
     const text = await extractPDFText(file.path);
     const gradData = await processData(text);
 
     res.status(201).send(gradData);
   } catch (e: any) {
-    res.status(e.statusCode ?? 500).send({ error: e.message });
+    sendError(res, { status: e.statusCode ?? 500, error: e.message });
   }
 };

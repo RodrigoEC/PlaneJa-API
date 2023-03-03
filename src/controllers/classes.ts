@@ -8,6 +8,7 @@ import {
   getClassesOffered,
 } from "../services/classesOffered/db";
 import { extractText } from "./index";
+import { sendError } from "../util/errors";
 
 const NOPARAMSERROR =
   "Paramêtros name (string) ou semester (string não foram enviados";
@@ -43,6 +44,13 @@ export const retrieveClassesOffered = async (req: Request, res: Response) => {
   try {
     const { name, semester } = req.query;
 
+    if (!name || !semester)
+      sendError(res, {
+        status: 400,
+        error:
+          "Parâmetros obrigatórios: 'name' (string) e 'semester' (string).",
+      });
+
     const classesOffered = await getClassesOffered(
       (name as string).toLocaleLowerCase(),
       semester as string
@@ -50,7 +58,7 @@ export const retrieveClassesOffered = async (req: Request, res: Response) => {
 
     res.status(201).send(classesOffered);
   } catch (e: any) {
-    res.status(e.statusCode ?? 500).send({ error: e.message });
+    sendError(res, { status: e.statusCode ?? 500, error: e.message });
   }
 };
 
@@ -79,7 +87,7 @@ export const excludeClassesOffered = async (req: Request, res: Response) => {
 
     res.status(200).send(status);
   } catch (e: any) {
-    res.status(e.statusCode ?? 500).send({ error: e.message });
+    sendError(res, { status: e.statusCode ?? 500, error: e.message });
   }
 };
 
@@ -98,6 +106,6 @@ export const retrieveUniqueSubject = async (req: Request, res: Response) => {
 
     res.status(200).send(subjects);
   } catch (e: any) {
-    res.status(e.statusCode ?? 500).send({ error: e.message });
+    sendError(res, { status: e.statusCode ?? 500, error: e.message });
   }
 };

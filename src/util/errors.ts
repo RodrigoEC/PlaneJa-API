@@ -1,3 +1,9 @@
+import { Response } from "express";
+
+export const sendError = (res: Response, payload: { status: number, error: string }) => {
+  return res.status(payload.status).send(payload);
+}
+
 export class ExtractError extends Error {
   statusCode = 422;
 
