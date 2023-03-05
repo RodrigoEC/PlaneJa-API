@@ -29,8 +29,7 @@ const calculateStudentProgress = (progresses: RegExpMatchArray[]): string => {
  */
 export async function extractRegexRecord(
   text: string,
-  requiredItems: string[],
-  recommendEnrollment: boolean
+  requiredItems: string[]
 ): Promise<Record> {
   text = text.replace(/(\r\n|\n|\r)/gm, " |");
 
@@ -113,10 +112,6 @@ export async function extractRegexRecord(
     });
   }
 
-  if (recommendEnrollment) {
-    const enrollments = await recommendSubjects(result, []);
-    studentRecord.recommended_enrollments = enrollments;
-  }
   return studentRecord as Record;
 }
 

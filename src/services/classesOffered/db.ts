@@ -2,6 +2,7 @@
 import * as mongoDB from "mongodb";
 import { CourseNotCreated } from "../../util/errors";
 import { defaultSemester, Semester } from "../../util/interfaces";
+import { getMostRecentSubject } from "../../util/util";
 
 export const collections: { classesOffered?: mongoDB.Collection } = {};
 
@@ -38,14 +39,19 @@ export const getClassesOffered = async (
   name: string,
   semester?: string
 ): Promise<Semester> => {
-  const query = { name, semester };
-  let subject: any = await collections.classesOffered?.findOne(query);
+
+  let subject: any
+  if (semester) {
+    const query = { name, semester };
+    subject = await collections.classesOffered?.findOne(query);
+  } else {
+    const classesList = await getAllClassesOffered(name)
+    subject = getMostRecentSubject(classesList)
+  }
 
   if (!subject) {
     subject = defaultSemester;
   }
-  delete subject.name;
-  delete subject.semester;
 
   return subject;
 };

@@ -44,11 +44,11 @@ export const retrieveClassesOffered = async (req: Request, res: Response) => {
   try {
     const { name, semester } = req.query;
 
-    if (!name || !semester)
+    if (!name)
       sendError(res, {
         status: 400,
         error:
-          "Parâmetros obrigatórios: 'name' (string) e 'semester' (string).",
+          "Parâmetros obrigatórios: 'name' (string).",
       });
 
     const classesOffered = await getClassesOffered(
