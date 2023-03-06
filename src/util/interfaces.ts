@@ -55,13 +55,15 @@ export interface Record {
   subjects?: StudentSubject[];
 }
 
-export interface enrollmentInfo {
+export interface EnrollmentInfo {
   enrollments: Subject[][];
+  semester: string,
   subjects_available: Subject[];
 }
 
-export const defaultEnrollmentInfo: enrollmentInfo = {
+export const defaultEnrollmentInfo: EnrollmentInfo = {
   enrollments: [],
+  semester: '',
   subjects_available: [],
 }
 

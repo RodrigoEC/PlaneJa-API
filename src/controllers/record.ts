@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { getClassesOffered } from "../services/classesOffered/db";
 import { recommendSubjects } from "../services/recommend";
 import { extractRegexRecord } from "../services/records";
-import { defaultEnrollmentInfo, enrollmentInfo } from "../util/interfaces";
+import { defaultEnrollmentInfo, EnrollmentInfo } from "../util/interfaces";
 import { extractPDFText } from "../util/util";
 
 export const extractRecord = async (req: Request, res: Response) => {
@@ -26,7 +26,7 @@ export const extractRecord = async (req: Request, res: Response) => {
 
     const gradData = await extractRegexRecord(text, requiredItems);
 
-    const enrollementInfo: enrollmentInfo = defaultEnrollmentInfo;
+    const enrollementInfo: EnrollmentInfo = defaultEnrollmentInfo;
 
     const response = {
       record: gradData,
@@ -43,6 +43,7 @@ export const extractRecord = async (req: Request, res: Response) => {
 
       response.enrollment_info.enrollments = enrollments;
       response.enrollment_info.subjects_available = enrollments[0];
+      response.enrollment_info.semester = semesterSubjects.semester;
     }
 
     res
