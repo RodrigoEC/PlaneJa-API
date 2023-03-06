@@ -53,9 +53,16 @@ export interface Record {
   status?: StudentStatus;
   progress?: string;
   subjects?: StudentSubject[];
-  enrollments?: string[][]
-  subjects_available?: string[]
-  semester?: Semester;
+}
+
+export interface enrollmentInfo {
+  enrollments: Subject[][];
+  subjects_available: Subject[];
+}
+
+export const defaultEnrollmentInfo: enrollmentInfo = {
+  enrollments: [],
+  subjects_available: [],
 }
 
 // Recommendation 
