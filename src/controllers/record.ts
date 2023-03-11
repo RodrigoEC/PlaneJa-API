@@ -31,24 +31,24 @@ export const extractRecord = async (req: Request, res: Response) => {
     const response = {
       record: gradData,
       enrollment_info: enrollementInfo,
-    }
+    };
     if (recommentEnrollment) {
       const semesterSubjects = await getClassesOffered(gradData.course);
 
       if (semesterSubjects.subjects_entries === 0) {
-        return res.status(206).send(response);
+        return res.status(206).send(JSON.parse(JSON.stringify(response)));
       }
       const enrollments = await recommendSubjects(gradData.subjects || [], []);
       const subjectsAvailable = enrollments;
+      const studentData = JSON.parse(JSON.stringify(response));
 
-      response.enrollment_info.enrollments = enrollments;
-      response.enrollment_info.subjects_available = enrollments[0];
-      response.enrollment_info.semester = semesterSubjects.semester;
+      studentData.enrollment_info.enrollments = enrollments;
+      studentData.enrollment_info.subjects_available = enrollments[0];
+      studentData.enrollment_info.semester = semesterSubjects.semester;
+      return res.status(200).send(studentData);
     }
 
-    res
-      .status(200)
-      .send(response);
+    res.status(200).send(response);
   } catch (e: any) {
     res.status(e.statusCode ?? 500).send({ error: e.message });
   }

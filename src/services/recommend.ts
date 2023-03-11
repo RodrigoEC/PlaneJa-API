@@ -82,6 +82,25 @@ export const recommendSubjects = async (
           },
         ],
       },
+      {
+        id: "1411182",
+        name: "LAB.DE ORG.E ARQUITETURA DE COMPUTADORES",
+        class_num: "01",
+        credits: 4,
+        workload: 60,
+        schedule: [
+          {
+            day: "3",
+            init_time: "10:00",
+            end_time: "12:00",
+          },
+          {
+            day: "6",
+            init_time: "08:00",
+            end_time: "10:00",
+          },
+        ],
+      },
     ],
     [
       {
