@@ -29,8 +29,8 @@ export const updateDependencies = async (
 ) => {
   if (replace) {
     await insertDependencies(dependencies);
-    const { replace, ...rest} = dependencies;
-    return rest
+    const { replace, ...rest } = dependencies;
+    return rest;
   }
 
   const formerDeps = await collections.dependencies?.findOne({
@@ -49,4 +49,18 @@ export const updateDependencies = async (
   );
 
   if (!result) throw new DependenciesNotCreated(dependencies.name);
+};
+
+/**
+ * Update new classes dependencies for a specific course
+ *
+ * @param dependencies (Dependencies) new Dependencies object
+ */
+export const getDependencies = async (course: string) => {
+  const deps = await collections.dependencies?.findOne({
+    name: course,
+  });
+
+  if (!deps) throw new DependenciesNotCreated(course);
+  else return deps.dependencies;
 };

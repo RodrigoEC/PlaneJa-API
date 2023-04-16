@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { sendError } from "../util/errors";
-import { insertDependencies, updateDependencies } from "../services/dependencies";
+import { getDependencies, insertDependencies, updateDependencies } from "../services/dependencies";
 import { Dependencies } from "../util/interfaces";
 
 /**
@@ -13,7 +13,7 @@ export const createDependencies = async (req: Request, res: Response) => {
     const { name } = req.body;
 
     if (!name)
-      sendError(res, {
+      return sendError(res, {
         status: 400,
         error: "Parâmetros obrigatórios: 'name' (string).",
       });
@@ -36,12 +36,36 @@ export const changeDependencies = async (req: Request, res: Response) => {
       const { name, replace } = req.body;
   
       if (!name)
-        sendError(res, {
+        return sendError(res, {
           status: 400,
           error: "Parâmetros obrigatórios: 'name' (string).",
         });
   
       const dependencies = await updateDependencies(req.body as Dependencies, replace);
+  
+      res.status(200).send(dependencies);
+    } catch (e: any) {
+      sendError(res, { status: e.statusCode ?? 500, error: e.message });
+    }
+  };
+
+
+  /**
+ * Retrieve a Dependency object to the database
+ *
+ * @param course (string) course's name object
+ */
+export const retrieveDependencies = async (req: Request, res: Response) => {
+    try {
+      const { name } = req.query;
+  
+      if (!name)
+        return sendError(res, {
+          status: 400,
+          error: "Parâmetros obrigatórios: 'name' (string).",
+        });
+  
+      const dependencies = await getDependencies(name as string);
   
       res.status(200).send(dependencies);
     } catch (e: any) {
