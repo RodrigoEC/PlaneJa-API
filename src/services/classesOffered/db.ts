@@ -4,7 +4,10 @@ import { CourseNotCreated } from "../../util/errors";
 import { defaultSemester, Semester } from "../../util/interfaces";
 import { getMostRecentSubject } from "../../util/util";
 
-export const collections: { classesOffered?: mongoDB.Collection } = {};
+export const collections: {
+  classesOffered?: mongoDB.Collection;
+  dependencies?: mongoDB.Collection;
+} = {};
 
 /**
  * Function responsible for connecting the backend to the database and set the collection's
@@ -20,8 +23,10 @@ export async function connectToDatabase() {
   const db: mongoDB.Db = client.db(process.env.DB_NAME);
 
   const planeja: mongoDB.Collection = db.collection("planeja");
-
   collections.classesOffered = planeja;
+  
+  const dependencies: mongoDB.Collection = db.collection("deps");
+  collections.dependencies = dependencies;
   console.log(
     `Successfully connected to database: ${db.databaseName} and collection: ${planeja.collectionName}`
   );
@@ -39,14 +44,13 @@ export const getClassesOffered = async (
   name: string,
   semester?: string
 ): Promise<Semester> => {
-
-  let subject: any
+  let subject: any;
   if (semester) {
     const query = { name, semester };
     subject = await collections.classesOffered?.findOne(query);
   } else {
-    const classesList = await getAllClassesOffered(name)
-    subject = getMostRecentSubject(classesList)
+    const classesList = await getAllClassesOffered(name);
+    subject = getMostRecentSubject(classesList);
   }
 
   if (!subject) {

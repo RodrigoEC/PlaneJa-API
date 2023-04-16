@@ -9,6 +9,7 @@ import {
 } from "./controllers/classes";
 import { extractClassesOffered } from "./controllers/classes";
 import { recommendEnrollment } from "./controllers/recommend";
+import { changeDependencies, createDependencies } from "./controllers/dependencies";
 
 export const router = express.Router();
 const upload = multer({ dest: os.tmpdir() });
@@ -19,6 +20,8 @@ router.get("/classes-offered", retrieveClassesOffered);
 router.delete("/classes-offered", excludeClassesOffered);
 router.get("/unique-subjects", retrieveUniqueSubject);
 router.post("/recommend", recommendEnrollment);
+router.post("/dependencies", createDependencies);
+router.patch("/dependencies", changeDependencies);
 router.get("/", (req: Request, res: Response) => {
   res.send("Code with Rico. Ready to run on Heroku.");
 });

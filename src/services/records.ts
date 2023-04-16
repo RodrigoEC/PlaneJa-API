@@ -6,7 +6,6 @@ import {
 import { ExtractError } from "../util/errors";
 import { Record, StudentStatus, StudentSubject } from "../util/interfaces";
 import { calculateProgress } from "../util/util";
-import { recommendSubjects } from "./recommend";
 
 const calculateStudentProgress = (progresses: RegExpMatchArray[]): string => {
   let current = 0;

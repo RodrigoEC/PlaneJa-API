@@ -57,21 +57,34 @@ export interface Record {
 
 export interface EnrollmentInfo {
   enrollments: Subject[][];
-  semester: string,
+  semester: string;
   subjects_available: Subject[];
 }
 
 export const defaultEnrollmentInfo: EnrollmentInfo = {
-  enrollments: [],
-  semester: '',
+  enrollments: [[]],
+  semester: "",
   subjects_available: [],
-}
+};
 
-// Recommendation 
+// Recommendation
 
 export interface SubjectContent {
   title: string;
   variant: string;
   position: number;
   locked: boolean;
+}
+
+export interface Dependencies {
+  replace?: boolean;
+  name: string;
+  dependencies: {
+    [key: string]: {
+      nome: string;
+      tipo: string;
+      periodo: number | null;
+      dependencias: Array<string>;
+    };
+  };
 }
