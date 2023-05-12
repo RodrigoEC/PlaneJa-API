@@ -78,13 +78,15 @@ export async function extractRegexRecord(
       };
 
       const { name: subjectName } = subjectData;
-      if (
-        (subjectName in Object.values(resultGrade) &&
-          resultGrade[subjectName].status !== "Aprovado") ||
-        !(subjectName in Object.values(resultGrade))
-      ) {
+
+      if (Object.keys(resultGrade).includes(subjectName)) {
+        resultGrade[subjectName].status = subjectData.status;
+        resultGrade[subjectName].professors = subjectData.professors;
+        resultGrade[subjectName].semester = subjectData.semester;
+      } else {
         resultGrade[subjectName] = subjectData;
       }
+
     }
   );
 
