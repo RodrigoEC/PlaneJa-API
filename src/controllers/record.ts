@@ -10,7 +10,8 @@ export const extractRecord = async (req: Request, res: Response) => {
     const file = req["file"];
     if (!file) return res.status(404).send("Missing file (File) parameter");
     const text = await extractPDFText(file.path);
-
+    
+    
     const { include, recommend } = req.query;
 
     const recommentEnrollment = recommend !== undefined;
@@ -18,12 +19,12 @@ export const extractRecord = async (req: Request, res: Response) => {
     if (include) {
       const includedItems = include.toString().split(",");
       requiredItems = includedItems.map((item) => item.trim());
-
+      
       if (recommentEnrollment && !requiredItems.includes("course")) {
         requiredItems.push("course");
       }
     }
-
+    
     const gradData = await extractRegexRecord(text, requiredItems);
 
     const enrollementInfo: EnrollmentInfo = defaultEnrollmentInfo;
