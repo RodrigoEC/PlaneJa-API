@@ -54,7 +54,7 @@ export const updateDependencies = async (
 /**
  * Update new classes dependencies for a specific course
  *
- * @param dependencies (Dependencies) new Dependencies object
+ * @param course (course) Course name from those dependencies wanted
  */
 export const getDependencies = async (course: string) => {
   const deps = await collections.dependencies?.findOne({
@@ -62,5 +62,5 @@ export const getDependencies = async (course: string) => {
   });
 
   if (!deps) throw new DependenciesNotCreated(course);
-  else return deps.dependencies;
+  else return deps;
 };

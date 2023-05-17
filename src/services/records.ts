@@ -4,8 +4,10 @@ import {
   regexStudentStatus,
 } from "../util/const";
 import { ExtractError } from "../util/errors";
-import { Record, StudentStatus, StudentSubject } from "../util/interfaces";
+import { Record, StudentStatus, StudentSubject, Subject } from "../util/interfaces";
 import { calculateProgress } from "../util/util";
+import { getClassesOffered } from "./classesOffered/db";
+import { getDependencies } from "./dependencies";
 
 const calculateStudentProgress = (progresses: RegExpMatchArray[]): string => {
   let current = 0;
@@ -124,3 +126,25 @@ const extractStudentStatus = (text: string): StudentStatus => {
     complementary: calculateProgress(studentStatus[2][1]),
   };
 };
+
+
+export const getAvailableSubjects = async (studentSubjects: Array<StudentSubject>, course: string): Promise<Array<any>> => {
+  const { dependencies } = await getDependencies("ciência da computação");
+
+  const { subjects } = await getClassesOffered(course);
+
+  const finishedSubjectsId = studentSubjects.map((subject: StudentSubject) => subject.id)
+
+
+  const nonTakenSUbs = subjects.filter((subject: Subject) => !finishedSubjectsId.includes(subject.id))
+
+  const availableSubs = nonTakenSUbs.map((subject: Subject) => {
+    const dependenciesTaken = dependencies[subject.id].dependencias.map((dep: string) => finishedSubjectsId.includes(dep)) 
+
+    return { ...subject, available: dependenciesTaken.every((isTaken: Boolean | null) => isTaken === true)}
+  })
+
+  return availableSubs
+}
+
+

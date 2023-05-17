@@ -13,6 +13,7 @@ export interface Subject {
   credits: number;
   workload: number;
   schedule: SubjectSchedule[];
+  available?: Boolean;
 }
 
 export interface SubjectSchedule {
@@ -36,7 +37,7 @@ export interface StudentStatus {
 }
 
 export interface StudentSubject {
-  id: number;
+  id: string;
   name: string;
   type: string;
   credits: number;
@@ -83,6 +84,7 @@ export interface Dependencies {
     [key: string]: {
       nome: string;
       tipo: string;
+      id: string;
       periodo: number | null;
       dependencias: Array<string>;
     };
