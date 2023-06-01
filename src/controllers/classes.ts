@@ -100,7 +100,7 @@ export const retrieveUniqueSubject = async (req: Request, res: Response) => {
   try {
     const { name } = req.query;
 
-    const subjects = await extractUniqueSubjects(
+    const subjects = await getClassesOffered(
       (name as string).toLocaleLowerCase()
     );
 

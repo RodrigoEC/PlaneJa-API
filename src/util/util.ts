@@ -58,6 +58,7 @@ export const getMostRecentSubject = (subjects: Semester[]): Semester => {
 
     if (year > mostRecentYear) {
       mostRecentYear = year;
+      mostRecentSemester = semester;
       recentSubject = subject;
     } else if (year === mostRecentYear && semester > mostRecentSemester) {
       mostRecentSemester = semester;

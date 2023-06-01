@@ -30,7 +30,7 @@ export const extractRecord = async (req: Request, res: Response) => {
 
     const response = {
       record: gradData,
-      subjects_available: availableSubs,
+      semester_data: availableSubs,
     };
 
     res.status(200).send(response);
