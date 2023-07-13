@@ -4,7 +4,12 @@ import {
   regexStudentStatus,
 } from "../util/const";
 import { ExtractError } from "../util/errors";
-import { Record, StudentStatus, StudentSubject, Subject } from "../util/interfaces";
+import {
+  Record,
+  StudentStatus,
+  StudentSubject,
+  Subject,
+} from "../util/interfaces";
 import { calculateProgress } from "../util/util";
 import { getClassesOffered } from "./classesOffered/db";
 import { getDependencies } from "./dependencies";
@@ -88,7 +93,6 @@ export async function extractRegexRecord(
       } else {
         resultGrade[subjectName] = subjectData;
       }
-
     }
   );
 
@@ -127,24 +131,36 @@ const extractStudentStatus = (text: string): StudentStatus => {
   };
 };
 
-
-export const getAvailableSubjects = async (studentSubjects: Array<StudentSubject>, course: string): Promise<{ semester: string, available_subjects: Array<any> }> => {
+export const getAvailableSubjects = async (
+  studentSubjects: Array<StudentSubject>,
+  course: string
+): Promise<{ semester: string; available_subjects: Array<any> }> => {
   const { dependencies } = await getDependencies("ciência da computação");
 
   const { subjects, semester } = await getClassesOffered(course);
 
-  const finishedSubjectsId = studentSubjects.map((subject: StudentSubject) => subject.id)
-
-
-  const nonTakenSUbs = subjects.filter((subject: Subject) => !finishedSubjectsId.includes(subject.id))
+  const filteredRecord = studentSubjects.filter(
+    (subject: StudentSubject) => subject?.status === "Aprovado"
+  );
+  const finishedSubjectsId = filteredRecord.map(
+    (subject: StudentSubject) => subject.id
+  );
+  const nonTakenSUbs = subjects.filter(
+    (subject: Subject) => !finishedSubjectsId.includes(subject.id)
+  );
 
   const availableSubs = nonTakenSUbs.map((subject: Subject) => {
-    const dependenciesTaken = dependencies[subject.id].dependencias.map((dep: string) => finishedSubjectsId.includes(dep))
+    const dependenciesTaken = dependencies[subject.id].dependencias.map(
+      (dep: string) => finishedSubjectsId.includes(dep)
+    );
 
-    return { ...subject, available: dependenciesTaken.every((isTaken: Boolean | null) => isTaken === true) }
-  })
+    return {
+      ...subject,
+      available: dependenciesTaken.every(
+        (isTaken: Boolean | null) => isTaken === true
+      ),
+    };
+  });
 
-  return { semester, available_subjects: availableSubs }
-}
-
-
+  return { semester, available_subjects: availableSubs };
+};

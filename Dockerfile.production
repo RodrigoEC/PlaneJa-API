@@ -4,11 +4,10 @@ WORKDIR /app
 
 ENV PORT=8080
 
-ENV DATABASE_URL=
+ENV DATABASE_URL=mongodb+srv://<name>:<password>@planeja-db.pf8a9zu.mongodb.net/?retryWrites=true&w=majority
 COPY package*.json ./
 
 RUN npm i
-
 
 COPY . . 
 
