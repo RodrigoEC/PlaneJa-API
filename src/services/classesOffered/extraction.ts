@@ -40,8 +40,12 @@ const formatSubjectSchedule = (
  */
 const formatSubjectsList = (rawSubjectsList: RegExpMatchArray[]): Subject[] => {
   const formatedSubjects = rawSubjectsList.map((subjectData) => {
-    const [, id, name, class_num, credits, workload, ...scheduleItems] =
+    const [, id, name, class_num, credits, workload, ...rest] =
       subjectData;
+
+    const scheduleItems = rest.slice(0, rest.length - 2)
+    const profs = rest.slice(-2);
+    
     const schedule = formatSubjectSchedule(scheduleItems);
 
     return {
@@ -51,6 +55,7 @@ const formatSubjectsList = (rawSubjectsList: RegExpMatchArray[]): Subject[] => {
       credits: +credits,
       workload: +workload,
       schedule,
+      professors: profs,
     };
   });
 
