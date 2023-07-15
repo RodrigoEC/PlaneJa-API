@@ -5,8 +5,7 @@ export const regexRecord =
 export const regexHeadCourseData = /\d{5} - (.*?) - D\\nPeríodo: (\d{4}.\d)/g;
 
 export const regexClassesOffered =
-  /(\d{7}) - (.*?)\\n(.*?)\\n(.*?)\\n(.*?)\\n(?:(\d) (\d{2}:\d{2})-(\d{2}:\d{2}) \(.*?\))(?:(\d) (\d{2}:\d{2})-(\d{2}:\d{2}) \(.*?\))?.*?Professores:.*?(?:- (.*?))(?:- (.*?))?\\n/g;
-
+  /(\d{7}) - (.*?)\\n(.*?)\\n(.*?)\\n(.*?)\\n(?:(\d) (\d{2}:\d{2})-(\d{2}:\d{2}) \(.*?\))(?:(\d) (\d{2}:\d{2})-(\d{2}:\d{2}) \(.*?\))?.*?(?:\\n- (.*?))(?:- (.*?))?\\n/g
 export const regexStudentStatus =
   /.(?:Obrigatórias|Optativas|Atividades complementares)(?:.*?\(.*?\))(.*?)\((.*?)%\)/g;
 
